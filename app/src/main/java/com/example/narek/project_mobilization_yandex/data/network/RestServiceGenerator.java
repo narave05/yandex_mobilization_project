@@ -1,4 +1,4 @@
-package com.example.narek.project_mobilization_yandex.data.network_api;
+package com.example.narek.project_mobilization_yandex.data.network;
 
 import java.util.concurrent.TimeUnit;
 

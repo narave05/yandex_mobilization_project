@@ -1,4 +1,4 @@
-package com.example.narek.project_mobilization_yandex.data.model.clean_models;
+package com.example.narek.project_mobilization_yandex.data.storage.clean_model;
 
 public class Language {
 

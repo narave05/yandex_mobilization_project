@@ -1,4 +1,4 @@
-package com.example.narek.project_mobilization_yandex.data.model;
+package com.example.narek.project_mobilization_yandex.data.storage.rest_model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -19,7 +19,7 @@ public class DictionaryResponse {
 
     }
 
-    private class Def {
+    private static class Def {
 
         @SerializedName("text")
         @Expose
@@ -37,7 +37,7 @@ public class DictionaryResponse {
     }
 
 
-    private class Ex {
+    private static class Ex {
 
         @SerializedName("text")
         @Expose
@@ -48,7 +48,7 @@ public class DictionaryResponse {
 
     }
 
-    private class Tr {
+    private static class Tr {
 
         @SerializedName("text")
         @Expose
@@ -65,7 +65,7 @@ public class DictionaryResponse {
 
     }
 
-    private class Mean {
+    private static class Mean {
 
         @SerializedName("text")
         @Expose
@@ -73,7 +73,7 @@ public class DictionaryResponse {
 
     }
 
-    private class Tr_ {
+    private static class Tr_ {
 
         @SerializedName("text")
         @Expose
