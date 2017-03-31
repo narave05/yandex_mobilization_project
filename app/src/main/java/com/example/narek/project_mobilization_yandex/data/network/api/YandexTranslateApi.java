@@ -1,8 +1,8 @@
 package com.example.narek.project_mobilization_yandex.data.network.api;
 
 
-import com.example.narek.project_mobilization_yandex.data.storage.rest_model.AvailableLanguagesResponse;
-import com.example.narek.project_mobilization_yandex.data.storage.rest_model.TranslationResponse;
+import com.example.narek.project_mobilization_yandex.data.model.rest_response.AvailableLanguagesResponse;
+import com.example.narek.project_mobilization_yandex.data.model.rest_response.TranslationResponse;
 import com.example.narek.project_mobilization_yandex.data.network.RestServiceGenerator;
 import com.example.narek.project_mobilization_yandex.util.constant.AppConfig;
 

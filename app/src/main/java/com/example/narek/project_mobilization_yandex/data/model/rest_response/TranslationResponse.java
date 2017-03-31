@@ -1,4 +1,4 @@
-package com.example.narek.project_mobilization_yandex.data.storage.rest_model;
+package com.example.narek.project_mobilization_yandex.data.model.rest_response;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
@@ -26,5 +26,14 @@ public class TranslationResponse {
 
     public List<String> getTextList() {
         return text;
+    }
+
+    @Override
+    public String toString() {
+        return "TranslationResponse{" +
+                "code=" + code +
+                ", lang='" + lang + '\'' +
+                ", text=" + text +
+                '}';
     }
 }

@@ -1,4 +1,4 @@
-package com.example.narek.project_mobilization_yandex.data.storage.rest_model;
+package com.example.narek.project_mobilization_yandex.data.model.rest_response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -4,15 +4,18 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.example.narek.project_mobilization_yandex.App;
+
 public class NetworkStatusChecker {
 
     private NetworkStatusChecker() {
-
+        //no instance
+        throw new RuntimeException("Private constructor cannot be accessed");
     }
 
-    public static boolean isNetworkAvailable(Context context) {
+    public static boolean isNetworkAvailable() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context
+        ConnectivityManager connectivityManager = (ConnectivityManager) App.getInstance().getSystemService(Context
                 .CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 

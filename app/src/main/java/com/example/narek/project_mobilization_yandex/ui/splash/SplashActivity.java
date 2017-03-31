@@ -18,5 +18,6 @@ public class SplashActivity extends BaseActivity<SplashContract.IView, SplashCon
     @Override
     public void openTargetActivity() {
         RootActivity.startThisActivity(this);
+        finish();
     }
 }

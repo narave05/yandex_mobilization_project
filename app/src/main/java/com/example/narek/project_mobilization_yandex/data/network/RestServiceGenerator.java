@@ -12,7 +12,8 @@ import static com.example.narek.project_mobilization_yandex.util.constant.Consta
 public class RestServiceGenerator {
 
     private static Retrofit.Builder sBuilder = new Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create());
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(getHttpClient());
 
     private static OkHttpClient getHttpClient() {
 
@@ -30,7 +31,6 @@ public class RestServiceGenerator {
 
         Retrofit retrofit = sBuilder
                 .baseUrl(baseUrl)
-                .client(getHttpClient())
                 .build();
         return retrofit.create(serviceClass);
     }
