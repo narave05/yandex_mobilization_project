@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.narek.project_mobilization_yandex.ui.history.HistoryFragment;
+import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.HistoryAndFavoriteRootFragment;
 import com.example.narek.project_mobilization_yandex.ui.settings.SettingsFragment;
 import com.example.narek.project_mobilization_yandex.ui.translate.TranslationFragment;
 
@@ -23,7 +23,7 @@ public class RootViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return TranslationFragment.newInstance();
             case 1:
-                return HistoryFragment.newInstance();
+                return HistoryAndFavoriteRootFragment.newInstance();
             case 2:
                 return SettingsFragment.newInstance();
         }

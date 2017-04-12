@@ -1,43 +1,72 @@
 package com.example.narek.project_mobilization_yandex.data.model.clean;
 
-import com.example.narek.project_mobilization_yandex.data.model.rest_response.DictionaryResponse;
+import com.example.narek.project_mobilization_yandex.data.model.rest.DictionaryResponse;
 
+import org.parceler.Parcel;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Example {
-    private final String mOriginalText;
-    private final List<String> mTranslatedTextList;
+import io.realm.ExampleRealmProxy;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
-    private Example(String originalText, List<String> translatedTextList) {
-        mOriginalText = originalText;
-        mTranslatedTextList = translatedTextList;
+@Parcel(implementations = {ExampleRealmProxy.class},
+        value = Parcel.Serialization.BEAN,
+        analyze = {Example.class})
+
+public class Example extends RealmObject{
+    private String mOriginalText;
+    private RealmList<RealmString> mTranslatedTextList;
+
+    public Example() {
+
     }
+
 
     public Example(DictionaryResponse.Ex ex) {
         mOriginalText = ex.getText();
         mTranslatedTextList = generateTranslatedTextItems(ex.getTranslatedTextList());
     }
 
-    private List<String> generateTranslatedTextItems(List<DictionaryResponse.Tr_> list) {
+    private RealmList<RealmString> generateTranslatedTextItems(List<DictionaryResponse.Tr_> list) {
 
         if (list == null) {
             return null;
         }
 
-        List<String> items = new ArrayList<>();
+        RealmList<RealmString> items = new RealmList<>();
         for (DictionaryResponse.Tr_ tr : list) {
-            items.add(tr.getText());
+            items.add(new RealmString(tr.getText()));
         }
 
         return items;
     }
+
 
     public String getOriginalText() {
         return mOriginalText;
     }
 
     public List<String> getTranslatedTextList() {
-        return mTranslatedTextList;
+        if (mTranslatedTextList == null) {
+            return null;
+        }
+
+        List<String> list = new ArrayList<>();
+        for (RealmString realmString : mTranslatedTextList) {
+            list.add(realmString.getString());
+        }
+
+        return list;
+    }
+
+    @Override
+    public String toString() {
+        return "Example{" +
+                "mOriginalText='" + mOriginalText + '\'' +
+                ", mTranslatedTextList=" + mTranslatedTextList +
+                '}';
     }
 }

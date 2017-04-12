@@ -11,6 +11,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include layout="@layout/translation_toolbar"/>
+
         <com.example.narek.project_mobilization_yandex.ui.widget.TranslationInputView
             android:id="@+id/translation_input_container"
             android:layout_width="match_parent"
@@ -29,10 +31,9 @@
                 android:id="@+id/translated_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:text="text"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
+                android:clickable="true"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:textColor="@android:color/black"

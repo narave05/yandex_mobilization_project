@@ -21,13 +21,10 @@ public class RootActivity extends BaseActivity<RootContract.IView, RootContract.
 
 
     @BindView(R.id.viewpager)
-    ViewPager mViewpager;
+    NonSwappableViewPager mViewpager;
 
     @BindView(R.id.bottom_tab)
     IconicTabLayout mBottomTab;
-
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
 
 
     public static void startThisActivity(Context context) {
@@ -39,10 +36,8 @@ public class RootActivity extends BaseActivity<RootContract.IView, RootContract.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root);
-        setSupportActionBar(mToolbar);
         setupViewPager(mViewpager);
         mBottomTab.setupWithViewPager(mViewpager);
-        mViewpager.setOffscreenPageLimit(3);
     }
 
     @NonNull
@@ -51,9 +46,15 @@ public class RootActivity extends BaseActivity<RootContract.IView, RootContract.
         return new RootPresenter();
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        RootViewPagerAdapter adapter = new RootViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
+    @Override
+    public void showError(String error) {
+
     }
 
+    private void setupViewPager(NonSwappableViewPager viewPager) {
+        RootViewPagerAdapter adapter = new RootViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setPagingEnabled(false);
+    }
 }

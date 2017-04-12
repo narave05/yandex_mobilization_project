@@ -1,5 +1,7 @@
 package com.example.narek.project_mobilization_yandex.ui.splash;
 
+import android.util.Log;
+
 import com.example.narek.project_mobilization_yandex.ui.base.BasePresenter;
 
 

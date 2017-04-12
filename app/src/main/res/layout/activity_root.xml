@@ -6,58 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/imge"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                app:srcCompat="@drawable/switch_twoway"
-                />
-
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/imge"
-                android:textSize="18sp"
-                android:text="Английский"
-                android:textColor="@android:color/black"/>
-
-
-            <TextView
-                android:id="@+id/text2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:textSize="18sp"
-                android:layout_toRightOf="@id/imge"
-                android:text="Русский"
-                android:textColor="@android:color/black"/>
-
-        </RelativeLayout>
-
-    </android.support.v7.widget.Toolbar>
-
-    <android.support.v4.view.ViewPager
+    <com.example.narek.project_mobilization_yandex.ui.main.NonSwappableViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="?actionBarSize"
-        android:layout_marginTop="?actionBarSize"/>
+        />
 
     <com.example.narek.project_mobilization_yandex.ui.widget.IconicTabLayout
         android:id="@+id/bottom_tab"

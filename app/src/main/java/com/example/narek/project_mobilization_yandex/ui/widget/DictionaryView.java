@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.TypedValue;
@@ -27,7 +28,7 @@ public class DictionaryView extends LinearLayout {
         super(context);
         setOrientation(VERTICAL);
         int paddingDp = DimenUtils.dpToPx(getContext(), 10);
-        setPadding(paddingDp,paddingDp,paddingDp,paddingDp);
+        setPadding(paddingDp, paddingDp, paddingDp, paddingDp);
         init(dictionary);
     }
 
@@ -37,12 +38,18 @@ public class DictionaryView extends LinearLayout {
         originalTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         originalTextView.setTextColor(Color.BLACK);
 
-        String originalText = dictionary.getOriginalText() + " " + "[" + dictionary.getTranscription() + "]";
-        Spannable text = new SpannableString(originalText);
-        int start = dictionary.getTranscription().length();
-        int end = originalText.length();
-        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.color4)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        originalTextView.setText(text);
+        SpannableStringBuilder headerTextBuilder = new SpannableStringBuilder();
+        headerTextBuilder.append(dictionary.getOriginalText());
+        headerTextBuilder.append(" ");
+        String transcription = dictionary.getTranscription();
+        if (transcription != null && !transcription.isEmpty()) {
+            transcription = "[" + transcription + "]";
+            Spannable spannableTranscription = new SpannableString(transcription);
+            spannableTranscription.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.color4)),
+                    0, transcription.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            headerTextBuilder.append(spannableTranscription);
+        }
+        originalTextView.setText(headerTextBuilder);
         addView(originalTextView);
 
         List<DictionaryItem> dictionaryItems = dictionary.getDictionaryItems();

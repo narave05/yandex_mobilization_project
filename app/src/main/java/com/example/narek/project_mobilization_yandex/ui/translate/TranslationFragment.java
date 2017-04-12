@@ -1,10 +1,12 @@
 package com.example.narek.project_mobilization_yandex.ui.translate;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,8 @@ import android.widget.TextView;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
-import com.example.narek.project_mobilization_yandex.ui.base.BaseFragment;
+import com.example.narek.project_mobilization_yandex.ui.base.base_repository.BaseRepositoryFragment;
+import com.example.narek.project_mobilization_yandex.ui.language_list.LanguageListActivity;
 import com.example.narek.project_mobilization_yandex.ui.widget.DictionaryView;
 import com.example.narek.project_mobilization_yandex.ui.widget.LoadingView;
 import com.example.narek.project_mobilization_yandex.ui.widget.TranslationInputView;
@@ -25,10 +28,15 @@ import net.yslibrary.android.keyboardvisibilityevent.Unregistrar;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class TranslationFragment extends BaseFragment<TranslationContract.IView, TranslationContract.IPresenter>
+import static com.example.narek.project_mobilization_yandex.util.constant.Constants.CHECKED_LANGUAGE_INTENT_KEY;
+import static com.example.narek.project_mobilization_yandex.util.constant.Constants.LANGUAGE_LIST_TYPE_INTENT_KEY;
+
+public class TranslationFragment extends BaseRepositoryFragment<TranslationContract.IView, TranslationContract.IPresenter>
         implements TranslationContract.IView,
         TranslationInputView.TextChangListener,
         TranslationInputView.OnCancelClick {
+
+    public static final int REQUEST_CODE = 152;
 
     @BindView(R.id.root_scroll_view)
     NestedScrollView mRootScrollView;
@@ -41,6 +49,15 @@ public class TranslationFragment extends BaseFragment<TranslationContract.IView,
 
     @BindView(R.id.loading_view)
     LoadingView mLoadingView;
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @BindView(R.id.first_lang_id)
+    TextView mFirstLangText;
+
+    @BindView(R.id.second_lang_id)
+    TextView mSecondLangText;
 
     Unregistrar mUnregistrar;
 
@@ -62,18 +79,19 @@ public class TranslationFragment extends BaseFragment<TranslationContract.IView,
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        presenter.init();
+
         mTranslationInputContainer.setTextChangListener(this);
         mTranslationInputContainer.setOnCancelClick(this);
 
-        mUnregistrar = KeyboardVisibilityEvent.registerEventListener(getActivity(), new KeyboardVisibilityEventListener() {
-            @Override
-            public void onVisibilityChanged(boolean isOpen) {
-                if (!isOpen) {
-                    mTranslationInputContainer.cancelViewFocus();
-                }
-            }
-        });
+        registerKeyboardVisibilityEvent();
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        presenter.handleOnActivityResult(requestCode, resultCode, data);
     }
 
     @NonNull
@@ -91,7 +109,6 @@ public class TranslationFragment extends BaseFragment<TranslationContract.IView,
     @Override
     public void onTextChanged(String text) {
         presenter.handleTextInput(text);
-
     }
 
     @Override
@@ -104,7 +121,6 @@ public class TranslationFragment extends BaseFragment<TranslationContract.IView,
         mRootScrollView.removeAllViews();
         mTranslatedText.setText(null);
     }
-
 
     @Override
     public void showProgress() {
@@ -127,7 +143,27 @@ public class TranslationFragment extends BaseFragment<TranslationContract.IView,
     public void showTranslation(String text, Dictionary dictionary) {
         mTranslatedText.setText(text);
         DictionaryView dictionaryView = new DictionaryView(getActivity(), dictionary);
+        mRootScrollView.removeAllViews();
         mRootScrollView.addView(dictionaryView);
+    }
+
+    @Override
+    public void startLanguageListActivity(int languageListType, String checkedLanguageCod) {
+        Intent startIntent = LanguageListActivity.getStartIntent(getActivity());
+        startIntent.putExtra(LANGUAGE_LIST_TYPE_INTENT_KEY, languageListType);
+        startIntent.putExtra(CHECKED_LANGUAGE_INTENT_KEY, checkedLanguageCod);
+        startActivityForResult(startIntent, REQUEST_CODE);
+    }
+
+    @Override
+    public void updateToolbarLanguages(String firstLang, String secondLang) {
+        mFirstLangText.setText(firstLang);
+        mSecondLangText.setText(secondLang);
+    }
+
+    @Override
+    public void updateInputTranslationText(String text) {
+        mTranslationInputContainer.setTranslationInputText(text);
     }
 
     @Override
@@ -137,8 +173,24 @@ public class TranslationFragment extends BaseFragment<TranslationContract.IView,
 
 
     @OnClick({R.id.translated_text, R.id.translated_text_scroll, R.id.fragment_container})
-    public void onViewClicked(View view) {
+    public void onTranslatedViewClicked(View view) {
         mTranslationInputContainer.cancelViewFocus();
         ViewHelper.hideKeyboard(mTranslationInputContainer);
+    }
+
+    @OnClick({R.id.switch_icon, R.id.first_lang_id, R.id.second_lang_id})
+    public void onViewClicked(View view) {
+        presenter.handleLanguageSelectOrSwap(view.getId());
+    }
+
+    private void registerKeyboardVisibilityEvent() {
+        mUnregistrar = KeyboardVisibilityEvent.registerEventListener(getActivity(), new KeyboardVisibilityEventListener() {
+            @Override
+            public void onVisibilityChanged(boolean isOpen) {
+                if (!isOpen) {
+                    mTranslationInputContainer.cancelViewFocus();
+                }
+            }
+        });
     }
 }

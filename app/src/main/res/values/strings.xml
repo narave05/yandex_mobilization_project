@@ -3,4 +3,7 @@
 
     <!-- TODO: Remove or change this placeholder mTranslatedText -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="trnsliationInputHintText">Введите текст</string>
+    <string name="language_list_tollbar_first_text">Язык текста</string>
+    <string name="language_list_tollbar_second_text">Язык перевода</string>
 </resources>

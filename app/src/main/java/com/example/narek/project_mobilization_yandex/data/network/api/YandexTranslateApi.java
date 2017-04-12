@@ -1,8 +1,8 @@
 package com.example.narek.project_mobilization_yandex.data.network.api;
 
 
-import com.example.narek.project_mobilization_yandex.data.model.rest_response.AvailableLanguagesResponse;
-import com.example.narek.project_mobilization_yandex.data.model.rest_response.TranslationResponse;
+import com.example.narek.project_mobilization_yandex.data.model.rest.AvailableLanguagesResponse;
+import com.example.narek.project_mobilization_yandex.data.model.rest.TranslationResponse;
 import com.example.narek.project_mobilization_yandex.data.network.RestServiceGenerator;
 import com.example.narek.project_mobilization_yandex.util.constant.AppConfig;
 
@@ -20,7 +20,7 @@ public class YandexTranslateApi {
 
     // TODO: 25.03.2017 set default lang
     public Call<AvailableLanguagesResponse> getAvailableLanguages() {
-        return mRestService.callAvailableLanguagesList(AppConfig.TRANSLATE_API_KEY, "en");
+        return mRestService.callAvailableLanguagesList(AppConfig.TRANSLATE_API_KEY, "ru");
     }
 
     public Call<Object> detectLanguageByText(String text) {

@@ -1,4 +1,4 @@
-package com.example.narek.project_mobilization_yandex.data.model.rest_response;
+package com.example.narek.project_mobilization_yandex.data.model.rest;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

@@ -1,16 +1,31 @@
 package com.example.narek.project_mobilization_yandex.data.model.clean;
 
-import com.example.narek.project_mobilization_yandex.data.model.rest_response.DictionaryResponse;
+import com.example.narek.project_mobilization_yandex.data.model.rest.DictionaryResponse;
 
+import org.parceler.Parcel;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TranslationItem {
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.TranslationItemRealmProxy;
+
+@Parcel(implementations = {TranslationItemRealmProxy.class},
+        value = Parcel.Serialization.BEAN,
+        analyze = {TranslationItem.class})
+public class TranslationItem extends RealmObject {
 
 
-    private final List<Synonym> mSynonymList;
-    private final List<String> mMeanList;
-    private final List<Example> mExampleList;
+    private RealmList<Synonym> mSynonymList;
+    private RealmList<RealmString> mMeanList;
+    private RealmList<Example> mExampleList;
+
+
+    public TranslationItem() {
+
+    }
 
     public TranslationItem(DictionaryResponse.Tr tr) {
         mSynonymList = generateSynonymItems(tr.getText(), tr.getGen(), tr.getSynonymList());
@@ -18,9 +33,9 @@ public class TranslationItem {
         mExampleList = generateExampleItems(tr.getExampleList());
     }
 
-    private List<Synonym> generateSynonymItems(String translatedText, String gen,
-                                               List<DictionaryResponse.Syn> synonymList) {
-        List<Synonym> items = new ArrayList<>();
+    private RealmList<Synonym> generateSynonymItems(String translatedText, String gen,
+                                                    List<DictionaryResponse.Syn> synonymList) {
+        RealmList<Synonym> items = new RealmList<>();
         items.add(new Synonym(translatedText, gen));
 
         if (synonymList != null) {
@@ -32,28 +47,28 @@ public class TranslationItem {
         return items;
     }
 
-    private List<String> generateMeanItems(List<DictionaryResponse.Mean> meanList) {
+    private RealmList<RealmString> generateMeanItems(List<DictionaryResponse.Mean> meanList) {
 
         if (meanList == null) {
             return null;
         }
 
-        List<String> items = new ArrayList<>();
+        RealmList<RealmString> items = new RealmList<>();
         for (DictionaryResponse.Mean mean : meanList) {
-            items.add(mean.getText());
+            items.add(new RealmString(mean.getText()));
         }
 
         return items;
     }
 
-    private List<Example> generateExampleItems(List<DictionaryResponse.Ex> exampleList) {
+    private RealmList<Example> generateExampleItems(List<DictionaryResponse.Ex> exampleList) {
 
 
         if (exampleList == null) {
             return null;
         }
 
-        List<Example> items = new ArrayList<>();
+        RealmList<Example> items = new RealmList<>();
         for (DictionaryResponse.Ex ex : exampleList) {
             items.add(new Example(ex));
         }
@@ -66,10 +81,29 @@ public class TranslationItem {
     }
 
     public List<String> getMeanList() {
-        return mMeanList;
+
+        if (mMeanList == null) {
+            return null;
+        }
+
+        List<String> list = new ArrayList<>();
+        for (RealmString realmString : mMeanList) {
+            list.add(realmString.getString());
+        }
+
+        return list;
     }
 
     public List<Example> getExampleList() {
         return mExampleList;
+    }
+
+    @Override
+    public String toString() {
+        return "TranslationItem{" +
+                "mSynonymList=" + mSynonymList +
+                ", mMeanList=" + mMeanList +
+                ", mExampleList=" + mExampleList +
+                '}';
     }
 }

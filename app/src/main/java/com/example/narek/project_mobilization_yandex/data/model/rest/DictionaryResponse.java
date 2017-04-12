@@ -1,4 +1,4 @@
-package com.example.narek.project_mobilization_yandex.data.model.rest_response;
+package com.example.narek.project_mobilization_yandex.data.model.rest;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -13,6 +13,14 @@ public class DictionaryResponse {
     @SerializedName("def")
     @Expose
     private List<Def> def = null;
+
+    @Override
+    public String toString() {
+        return "DictionaryResponse{" +
+                "head=" + head +
+                ", def=" + def +
+                '}';
+    }
 
     public List<Def> getDictionaryList() {
         return def;
@@ -31,7 +39,7 @@ public class DictionaryResponse {
         private String pos;
         @SerializedName("ts")
         @Expose
-        private String ts;
+        private String ts = null;
         @SerializedName("tr")
         @Expose
         private List<Tr> tr = null;
@@ -45,11 +53,21 @@ public class DictionaryResponse {
         }
 
         public String getTranscription() {
-            return ts;
+            return ts != null ? ts : null;
         }
 
         public List<Tr> getTranslatedList() {
             return tr;
+        }
+
+        @Override
+        public String toString() {
+            return "Def{" +
+                    "text='" + text + '\'' +
+                    ", pos='" + pos + '\'' +
+                    ", ts='" + ts + '\'' +
+                    ", tr=" + tr +
+                    '}';
         }
     }
 
@@ -69,6 +87,14 @@ public class DictionaryResponse {
 
         public List<Tr_> getTranslatedTextList() {
             return tr;
+        }
+
+        @Override
+        public String toString() {
+            return "Ex{" +
+                    "text='" + text + '\'' +
+                    ", tr=" + tr +
+                    '}';
         }
     }
 
@@ -113,6 +139,18 @@ public class DictionaryResponse {
         public List<Syn> getSynonymList() {
             return syn;
         }
+
+        @Override
+        public String toString() {
+            return "Tr{" +
+                    "text='" + text + '\'' +
+                    ", pos='" + pos + '\'' +
+                    ", gen='" + gen + '\'' +
+                    ", syn=" + syn +
+                    ", mean=" + mean +
+                    ", ex=" + ex +
+                    '}';
+        }
     }
 
     public static class Mean {
@@ -124,6 +162,13 @@ public class DictionaryResponse {
         public String getText() {
             return text;
         }
+
+        @Override
+        public String toString() {
+            return "Mean{" +
+                    "text='" + text + '\'' +
+                    '}';
+        }
     }
 
     public static class Tr_ {
@@ -134,6 +179,13 @@ public class DictionaryResponse {
 
         public String getText() {
             return text;
+        }
+
+        @Override
+        public String toString() {
+            return "Tr_{" +
+                    "text='" + text + '\'' +
+                    '}';
         }
     }
 
@@ -156,6 +208,15 @@ public class DictionaryResponse {
 
         public String getGen() {
             return gen;
+        }
+
+        @Override
+        public String toString() {
+            return "Syn{" +
+                    "text='" + text + '\'' +
+                    ", pos='" + pos + '\'' +
+                    ", gen='" + gen + '\'' +
+                    '}';
         }
     }
 }

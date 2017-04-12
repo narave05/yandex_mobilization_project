@@ -48,17 +48,17 @@ public class TranslationItemView extends LinearLayout {
         }
 
         List<Synonym> synonymList = translationItem.getSynonymList();
-        if (synonymList != null) {
+        if (synonymList != null && !synonymList.isEmpty()) {
             generateSynonymViews(synonymList);
         }
 
         List<String> meanList = translationItem.getMeanList();
-        if (meanList != null) {
+        if (meanList != null && !meanList.isEmpty()) {
             generateMeanViews(meanList);
         }
 
         List<Example> exampleList = translationItem.getExampleList();
-        if (exampleList != null) {
+        if (exampleList != null && !exampleList.isEmpty()) {
             generateExampleViews(exampleList);
         }
     }

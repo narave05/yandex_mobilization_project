@@ -9,7 +9,12 @@ import com.example.narek.project_mobilization_yandex.data.interfaces.ResultCallb
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
 import com.example.narek.project_mobilization_yandex.data.model.clean.LanguagePair;
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.SaveTranslationEvent;
 import com.example.narek.project_mobilization_yandex.ui.base.base_repository.BaseRepositoryPresenter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import static com.example.narek.project_mobilization_yandex.util.constant.Constants.FIRST_LANGUAGE_LIST;
 import static com.example.narek.project_mobilization_yandex.util.constant.Constants.LANGUAGE_INTENT_KEY;
@@ -33,6 +38,21 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
         if (isViewAttached()) {
             callUpdateToolbarLanguages();
         }
+    }
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSaveTranslationEvent(SaveTranslationEvent event) {
+        Log.e("onSaveEvent: ", " " + "onSaveEvent");
     }
 
     @Override
@@ -128,7 +148,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
             return;
         }
         getView().resetTranslationView();
-        getDataRepository().getTranslationData(mLastInputText, mLanguagePair.getLanguagePairCods(),
+        getRepository().findTranslationDataInBackground(mLastInputText, mLanguagePair.getLanguagePairCods(),
                 new ResultCallback<TranslationDTO>() {
                     @Override
                     public void onStart() {

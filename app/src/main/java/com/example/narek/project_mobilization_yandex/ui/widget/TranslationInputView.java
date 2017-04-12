@@ -104,7 +104,7 @@ public class TranslationInputView extends RelativeLayout implements TextWatcher 
         mTranslationInputText.setBackground(null);
         mTranslationInputText.setTextColor(ContextCompat.getColor(getContext(), R.color.input_text_color));
         mTranslationInputText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.color5));
-        mTranslationInputText.setHint("Введите текст");
+        mTranslationInputText.setHint(R.string.trnsliationInputHintText);
         mTranslationInputText.setSingleLine(false);
         mTranslationInputText.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
         cancelViewFocus();
@@ -158,8 +158,8 @@ public class TranslationInputView extends RelativeLayout implements TextWatcher 
         mTranslationInputText.clearFocus();
     }
 
-    public EditText getTranslationInputText() {
-        return mTranslationInputText;
+    public void setTranslationInputText(String text) {
+        mTranslationInputText.setText(text);
     }
 
     public interface TextChangListener {

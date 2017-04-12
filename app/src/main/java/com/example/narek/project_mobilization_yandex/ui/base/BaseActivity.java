@@ -45,8 +45,4 @@ public abstract class BaseActivity<V extends BaseContract.IView, P extends BaseC
             unbinder.unbind();
         }
     }
-
-    protected void showError(String message) {
-        ViewHelper.showToast(this, message);
-    }
 }

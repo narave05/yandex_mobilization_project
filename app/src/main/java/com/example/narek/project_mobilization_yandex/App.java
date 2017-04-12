@@ -1,6 +1,10 @@
 package com.example.narek.project_mobilization_yandex;
 
 import android.app.Application;
+import android.util.Log;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 
 public class App extends Application{
@@ -15,6 +19,21 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
         instance = this;
+        initRealm();
     }
 
+    private void initRealm() {
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .name("projectMobilizationYandex.realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Log.e("onLowMemory: ", "SSSSSSSSSS ");
+    }
 }

@@ -1,15 +1,27 @@
 package com.example.narek.project_mobilization_yandex.data.model.clean;
 
-import com.example.narek.project_mobilization_yandex.data.model.rest_response.DictionaryResponse;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.rest.DictionaryResponse;
 
-import java.util.ArrayList;
+import org.parceler.Parcel;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class Dictionary {
+import io.realm.DictionaryRealmProxy;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.TranslationDTORealmProxy;
 
-    private final String mOriginalText;
-    private final String mTranscription;
-    private final List<DictionaryItem> mDictionaryItems;
+
+public class Dictionary extends RealmObject{
+
+    private String mOriginalText;
+    private String mTranscription;
+    private RealmList<DictionaryItem> mDictionaryItems;
+
+    public Dictionary() {
+    }
 
     public Dictionary(List<DictionaryResponse.Def> dictionaryResponses) {
         if (dictionaryResponses != null && dictionaryResponses.size() > 0) {
@@ -36,16 +48,23 @@ public class Dictionary {
         return mDictionaryItems;
     }
 
-    private List<DictionaryItem> generateDictionaryItems(List<DictionaryResponse.Def> list) {
+    private RealmList<DictionaryItem> generateDictionaryItems(List<DictionaryResponse.Def> list) {
         if (list == null) {
             return null;
         }
-        List<DictionaryItem> items = new ArrayList<>();
+        RealmList<DictionaryItem> items = new RealmList<>();
         for (DictionaryResponse.Def def : list) {
             items.add(new DictionaryItem(def));
         }
         return items;
     }
 
-
+    @Override
+    public String toString() {
+        return "Dictionary{" +
+                "mOriginalText='" + mOriginalText + '\'' +
+                ", mTranscription='" + mTranscription + '\'' +
+                ", mDictionaryItems=" + mDictionaryItems +
+                '}';
+    }
 }

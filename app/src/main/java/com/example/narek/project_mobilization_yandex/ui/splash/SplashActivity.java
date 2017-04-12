@@ -20,4 +20,9 @@ public class SplashActivity extends BaseActivity<SplashContract.IView, SplashCon
         RootActivity.startThisActivity(this);
         finish();
     }
+
+    @Override
+    public void showError(String error) {
+
+    }
 }

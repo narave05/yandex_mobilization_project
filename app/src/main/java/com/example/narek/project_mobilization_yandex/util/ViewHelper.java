@@ -1,17 +1,12 @@
 package com.example.narek.project_mobilization_yandex.util;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-
-import com.example.narek.project_mobilization_yandex.R;
 
 import java.lang.reflect.Method;
 

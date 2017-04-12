@@ -15,5 +15,7 @@ public interface BaseContract {
 
     interface IView extends MvpView {
 
+        void showError(String error);
+
     }
 }
