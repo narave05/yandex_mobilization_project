@@ -1,7 +1,7 @@
 package com.example.narek.project_mobilization_yandex.ui.language_list;
 
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
-import com.example.narek.project_mobilization_yandex.ui.base.base_repository.BaseRepositoryContract;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryContract;
 
 import java.util.List;
 
@@ -21,7 +21,9 @@ interface LanguageListContract {
 
     interface IPresenter extends BaseRepositoryContract.IPresenter<IView> {
 
-        void startLoadData(String checkedLanguageCod);
+        void init(String checkedLanguageCod);
+
+        void startLoadData();
 
         void handleLanguageSelected(Language language);
 

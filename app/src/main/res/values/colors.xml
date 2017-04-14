@@ -16,5 +16,7 @@
     <color name="language_line_color">#e4e4e4</color>
     <color name="language_list_item_color">#f6f5f3</color>
     <color name="switch_twoway_icon_color">#222222</color>
+    <color name="fav_active_icon_color">#ffcc00</color>
+    <color name="fav_inactive_icon_color">#858e98</color>
 
 </resources>

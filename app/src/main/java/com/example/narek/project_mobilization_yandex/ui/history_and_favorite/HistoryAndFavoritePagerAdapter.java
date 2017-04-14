@@ -10,7 +10,8 @@ import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.his
 public class HistoryAndFavoritePagerAdapter extends FragmentPagerAdapter {
 
     // TODO: 12.04.2017 move to recurse
-   private String [] mTitles = new String[] {"История","Избрание"};
+    private String[] mTitles = new String[]{"История", "Избрание"};
+    private Fragment[] mFragments = new Fragment[]{HistoryListFragment.newInstance(), FavoriteListFragment.newInstance()};
 
     public HistoryAndFavoritePagerAdapter(FragmentManager manager) {
         super(manager);
@@ -18,14 +19,7 @@ public class HistoryAndFavoritePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
-        switch (position) {
-            case 0:
-                return HistoryListFragment.newInstance();
-            case 1:
-                return FavoriteListFragment.newInstance();
-        }
-        return null;
+        return mFragments[position];
     }
 
     @Override

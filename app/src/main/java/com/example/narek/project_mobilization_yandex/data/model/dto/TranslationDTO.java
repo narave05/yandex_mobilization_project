@@ -1,31 +1,19 @@
 package com.example.narek.project_mobilization_yandex.data.model.dto;
 
 import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
-import com.example.narek.project_mobilization_yandex.data.model.clean.RealmString;
+import com.example.narek.project_mobilization_yandex.data.model.dao.TranslationDao;
 
-import org.parceler.Parcel;
-
-import java.util.ArrayList;
-import java.util.Date;
+import java.io.Serializable;
 import java.util.List;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.TranslationDTORealmProxy;
-import io.realm.annotations.PrimaryKey;
+public class TranslationDTO implements Serializable {
 
-@Parcel(implementations = {TranslationDTORealmProxy.class},
-        value = Parcel.Serialization.BEAN,
-        analyze = {TranslationDTO.class})
-public class TranslationDTO extends RealmObject {
 
-    @PrimaryKey
     private String primaryKey;
 
     private String mLanguagePairCodText;
     private String mOriginalText;
-    private Date createdOrUpdatedDate;
-    private RealmList<RealmString> mTranslatedTexts;
+    private List<String> mTranslatedTexts;
     private Dictionary mDictionary;
     private boolean isFavorite;
 
@@ -33,34 +21,27 @@ public class TranslationDTO extends RealmObject {
 
     }
 
+    public TranslationDTO(TranslationDao translationDao) {
+        primaryKey = translationDao.getPrimaryKey();
+        mLanguagePairCodText = translationDao.getLanguagePairCodText();
+        mOriginalText = translationDao.getOriginalText();
+        mTranslatedTexts = translationDao.getTranslatedTextList();
+        mDictionary = translationDao.getDictionary() != null ? new Dictionary(translationDao.getDictionary()) : null;
+        isFavorite = translationDao.isFavorite();
+    }
+
+
     public TranslationDTO(String originalText, String languagePairCodText, List<String> translatedTexts, Dictionary dictionary) {
-        createdOrUpdatedDate = new Date();
         mOriginalText = originalText;
-        mTranslatedTexts = generateTranslatedTexts(translatedTexts);
+        mTranslatedTexts = translatedTexts;
         mDictionary = dictionary;
         mLanguagePairCodText = languagePairCodText;
         primaryKey = mOriginalText + mLanguagePairCodText;
     }
 
-    private RealmList<RealmString> generateTranslatedTexts(List<String> translatedTexts) {
-        if (translatedTexts == null) {
-            return null;
-        }
-
-        RealmList<RealmString> realmStrings = new RealmList<>();
-        for (String text : translatedTexts) {
-            realmStrings.add(new RealmString(text));
-        }
-        return realmStrings;
-    }
-
     public boolean hasDictionary() {
         return mDictionary != null && mDictionary.getOriginalText() != null
                 && mDictionary.getDictionaryItems() != null;
-    }
-
-    public void setTranslatedTexts(List<String> translatedTexts) {
-        mTranslatedTexts = generateTranslatedTexts(translatedTexts);
     }
 
     public void setDictionary(Dictionary dictionary) {
@@ -72,18 +53,7 @@ public class TranslationDTO extends RealmObject {
     }
 
     public List<String> getTranslatedTextList() {
-        if (mTranslatedTexts == null) {
-            return null;
-        }
-
-        List<String> list = new ArrayList<>();
-        if (mTranslatedTexts.size() == 0) {
-            list.add("");
-        }
-        for (RealmString realmString : mTranslatedTexts) {
-            list.add(realmString.getString());
-        }
-        return list;
+        return mTranslatedTexts;
     }
 
     public String getPrimaryKey() {
@@ -107,12 +77,31 @@ public class TranslationDTO extends RealmObject {
     }
 
     @Override
+    public boolean equals(Object obj) {
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (!(obj instanceof TranslationDTO)) {
+            return false;
+        }
+
+        TranslationDTO translationDTO = ((TranslationDTO) obj);
+        return primaryKey.equals(translationDTO.getPrimaryKey());
+    }
+
+    @Override
+    public int hashCode() {
+        return primaryKey.hashCode() * 31 - 154;
+    }
+
+    @Override
     public String toString() {
-        return "TranslationDTO{" +
+        return "TranslationDao{" +
                 "primaryKey='" + primaryKey + '\'' +
                 ", mLanguagePairCodText='" + mLanguagePairCodText + '\'' +
                 ", mOriginalText='" + mOriginalText + '\'' +
-                ", createdOrUpdatedDate=" + createdOrUpdatedDate +
                 ", mTranslatedTexts=" + mTranslatedTexts +
                 ", mDictionary=" + mDictionary +
                 ", isFavorite=" + isFavorite +

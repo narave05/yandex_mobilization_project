@@ -11,14 +11,15 @@ import android.view.ViewGroup;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
-import com.example.narek.project_mobilization_yandex.ui.base.BaseFragment;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryFragment;
 import com.example.narek.project_mobilization_yandex.ui.widget.LoadingView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class FavoriteListFragment extends BaseFragment<FavoriteListContract.IView, FavoriteListContract.IPresenter>
+public class FavoriteListFragment extends BaseRepositoryFragment<FavoriteListContract.IView, FavoriteListContract.IPresenter>
         implements FavoriteListContract.IView, FavoriteListAdapter.OnItemClickListener {
 
     @BindView(R.id.recycler_view)
@@ -72,17 +73,29 @@ public class FavoriteListFragment extends BaseFragment<FavoriteListContract.IVie
     }
 
     @Override
-    public void onItemClickListener(String primaryKey, boolean isChecked) {
-        presenter.handleFavoriteStatusChanged(primaryKey, isChecked);
+    public void onItemClickListener(TranslationDTO translationDTO) {
+        presenter.handleFavoriteStatusChanged(translationDTO);
     }
 
     @Override
     public void showFavoriteList(List<TranslationDTO> data) {
+        setupAdapter(data);
+    }
+
+    @Override
+    public void addFavoriteItem(TranslationDTO translationDTO) {
         if (mAdapter == null) {
-            setupAdapter(data);
+            List<TranslationDTO> list = new ArrayList<>();
+            list.add(translationDTO);
+            setupAdapter(list);
         } else {
-            mAdapter.notifyDataSetChanged();
+            mAdapter.addFirst(translationDTO);
         }
+    }
+
+    @Override
+    public void removeFavoriteItem(TranslationDTO translationDTO) {
+        mAdapter.removeItem(translationDTO);
     }
 
 

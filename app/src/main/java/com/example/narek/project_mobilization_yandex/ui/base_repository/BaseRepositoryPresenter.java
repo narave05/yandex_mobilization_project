@@ -1,4 +1,4 @@
-package com.example.narek.project_mobilization_yandex.ui.base.base_repository;
+package com.example.narek.project_mobilization_yandex.ui.base_repository;
 
 import android.support.annotation.CallSuper;
 
@@ -13,13 +13,12 @@ public abstract class BaseRepositoryPresenter<V extends BaseRepositoryContract.I
     @CallSuper
     public void onCreate() {
         super.onCreate();
-        mRepository = Repository.getInstance();
+        mRepository =new  Repository();
     }
 
     @CallSuper
     public void onDestroy() {
         super.onDestroy();
-        mRepository = null;
     }
 
     public IRepository getRepository() {

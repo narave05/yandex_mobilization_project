@@ -2,15 +2,13 @@ package com.example.narek.project_mobilization_yandex.ui.translate;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 
 import com.example.narek.project_mobilization_yandex.R;
-import com.example.narek.project_mobilization_yandex.data.interfaces.ResultCallback;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
 import com.example.narek.project_mobilization_yandex.data.model.clean.LanguagePair;
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
-import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.SaveTranslationEvent;
-import com.example.narek.project_mobilization_yandex.ui.base.base_repository.BaseRepositoryPresenter;
+import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.TranslatedEvent;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryPresenter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -27,6 +25,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     private String mLastInputText = null;
     private String mLastTranslatedText = null;
     private LanguagePair mLanguagePair = new LanguagePair();
+    private TranslationDTO mLastTranslationDTO = null;
 
     @Override
     public void onCreate() {
@@ -48,11 +47,6 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSaveTranslationEvent(SaveTranslationEvent event) {
-        Log.e("onSaveEvent: ", " " + "onSaveEvent");
     }
 
     @Override
@@ -93,6 +87,14 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     }
 
     @Override
+    public void handleFavoriteClick() {
+        if (mLastTranslationDTO != null) {
+            mLastTranslationDTO.setFavorite(!mLastTranslationDTO.isFavorite());
+            EventBus.getDefault().postSticky(mLastTranslationDTO);
+        }
+    }
+
+    @Override
     public void handleOnActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == TranslationFragment.REQUEST_CODE) {
             if (data != null) {
@@ -120,16 +122,36 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoadTranslationEvent(TranslatedEvent event) {
+        if (event.getError() == null) {
+            showTranslation(event.getTranslationDTO());
+        } else {
+            showError(event.getError());
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFavoriteStatusChangedEvent(TranslationDTO event) {
+        if (!isViewAttached() || !event.equals(mLastTranslationDTO)) {
+            return;
+        }
+        getView().showFavoriteIcon(event.isFavorite());
+    }
+
     private void clearInputData() {
         mLastInputText = null;
         mLastTranslatedText = null;
+        mLastTranslationDTO = null;
         if (isViewAttached()) {
+            getView().hideFavoriteIcon();
             getView().hideProgress();
             getView().resetTranslationView();
         }
     }
 
-    public void swapTranslatedAndInputText(boolean isSet) {
+    private void swapTranslatedAndInputText(boolean isSet) {
         if (!isSet) {
             mLastInputText = mLastTranslatedText;
             getView().updateInputTranslationText(mLastInputText);
@@ -147,41 +169,37 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
         if (mLastInputText == null || mLastInputText.isEmpty()) {
             return;
         }
-        getView().resetTranslationView();
-        getRepository().findTranslationDataInBackground(mLastInputText, mLanguagePair.getLanguagePairCods(),
-                new ResultCallback<TranslationDTO>() {
-                    @Override
-                    public void onStart() {
-                        if (isViewAttached()) {
-                            getView().showProgress();
-                        }
-                    }
 
-                    @Override
-                    public void onResult(TranslationDTO data) {
-                        if (isViewAttached()) {
-                            getView().hideProgress();
-                            if (!data.getOriginalText().equalsIgnoreCase(mLastInputText)) {
-                                return;
-                            }
-                            mLastTranslatedText = data.getTranslatedTextList().get(0);
-                            if (data.hasDictionary()) {
-                                getView().showTranslation(mLastTranslatedText, data.getDictionary());
-                            } else {
-                                getView().showTranslation(mLastTranslatedText);
-                            }
-                        }
-                    }
+        if (isViewAttached()) {
+            getView().hideFavoriteIcon();
+            getView().showProgress();
+            getView().resetTranslationView();
+        }
+        getRepository().findTranslationDataAsync(mLastInputText, mLanguagePair.getLanguagePairCods());
+    }
 
-                    @Override
-                    public void onError(Throwable error) {
-                        Log.e("onError: ", " " + error.getMessage());
-                        if (isViewAttached()) {
-                            getView().hideProgress();
-                            getView().showError(error.getMessage());
-                        }
+    private void showError(String error) {
+        if (isViewAttached()) {
+            getView().hideFavoriteIcon();
+            getView().hideProgress();
+            getView().showError(error);
+        }
+    }
 
-                    }
-                });
+    private void showTranslation(TranslationDTO data) {
+        if (isViewAttached()) {
+            getView().hideProgress();
+            getView().showFavoriteIcon(data.isFavorite());
+            if (!data.getOriginalText().equalsIgnoreCase(mLastInputText)) {
+                return;
+            }
+            mLastTranslationDTO = data;
+            mLastTranslatedText = data.getTranslatedTextList().get(0);
+            if (data.hasDictionary()) {
+                getView().showTranslation(mLastTranslatedText, data.getDictionary());
+            } else {
+                getView().showTranslation(mLastTranslatedText);
+            }
+        }
     }
 }

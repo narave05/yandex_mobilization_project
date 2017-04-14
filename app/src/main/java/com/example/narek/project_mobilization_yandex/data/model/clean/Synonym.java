@@ -1,20 +1,21 @@
 package com.example.narek.project_mobilization_yandex.data.model.clean;
 
 
-import org.parceler.Parcel;
+import com.example.narek.project_mobilization_yandex.data.model.dao.SynonymDao;
 
-import io.realm.RealmObject;
-import io.realm.SynonymRealmProxy;
+import java.io.Serializable;
 
-@Parcel(implementations = {SynonymRealmProxy.class},
-        value = Parcel.Serialization.BEAN,
-        analyze = {Synonym.class})
-public class Synonym extends RealmObject {
+public class Synonym implements Serializable {
     private String mTranslatedText;
     private String mGen;
 
     public Synonym() {
 
+    }
+
+    public Synonym(SynonymDao synonymDao) {
+        mTranslatedText = synonymDao.getTranslatedText();
+        mGen = synonymDao.getGen();
     }
 
     public Synonym(String translatedText, String gen) {
@@ -32,7 +33,7 @@ public class Synonym extends RealmObject {
 
     @Override
     public String toString() {
-        return "Synonym{" +
+        return "SynonymDao{" +
                 "mTranslatedText='" + mTranslatedText + '\'' +
                 ", mGen='" + mGen + '\'' +
                 '}';

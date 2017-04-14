@@ -1,6 +1,6 @@
 package com.example.narek.project_mobilization_yandex.data.db;
 
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dao.TranslationDao;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -8,55 +8,44 @@ import io.realm.Sort;
 
 public class DatabaseRepository {
 
-    public static void saveTranslation(final TranslationDTO translationDTO) {
+    public static void saveTranslation(Realm realm, final TranslationDao translationDao) {
 
-        final Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealmOrUpdate(translationDTO);
-            }
-        });
-    }
-
-    public static void updateFavoriteStatus(final String primaryKey, final boolean isFavorite) {
-
-        Realm realm = Realm.getDefaultInstance();
         if (!realm.isInTransaction()) {
             realm.beginTransaction();
         }
-        TranslationDTO translationDTO = getTranslationByPrimaryKey(primaryKey);
-        translationDTO.setFavorite(isFavorite);
+        realm.copyToRealmOrUpdate(translationDao);
+        realm.commitTransaction();
+
+    }
+
+    public static void updateFavoriteStatus(Realm realm, final String primaryKey, final boolean isFavorite) {
+
+        if (!realm.isInTransaction()) {
+            realm.beginTransaction();
+        }
+        TranslationDao translationDao = getTranslationByPrimaryKey(realm, primaryKey);
+        translationDao.setFavorite(isFavorite);
         realm.commitTransaction();
     }
 
-    public static TranslationDTO getTranslationByPrimaryKey(String primaryKey) {
+    public static TranslationDao getTranslationByPrimaryKey(Realm realm, String primaryKey) {
 
-        Realm realm = Realm.getDefaultInstance();
-        TranslationDTO translationDTO = realm.where(TranslationDTO.class)
+        return realm.where(TranslationDao.class)
                 .equalTo("primaryKey", primaryKey)
                 .findFirst();
-
-        return translationDTO;
     }
 
-    public static RealmResults<TranslationDTO> getAllTranslations() {
+    public static RealmResults<TranslationDao> getAllTranslations(Realm realm) {
 
-        final Realm realm = Realm.getDefaultInstance();
-        RealmResults<TranslationDTO> translationDTOs = realm.where(TranslationDTO.class)
+        return realm.where(TranslationDao.class)
                 .findAllSorted("createdOrUpdatedDate", Sort.DESCENDING);
 
-        return translationDTOs;
-
     }
 
-    public static RealmResults<TranslationDTO> getFavorites() {
+    public static RealmResults<TranslationDao> getFavorites(Realm realm) {
 
-        final Realm realm = Realm.getDefaultInstance();
-        RealmResults<TranslationDTO> translationDTOs = realm.where(TranslationDTO.class)
+        return realm.where(TranslationDao.class)
                 .equalTo("isFavorite", true)
                 .findAllSorted("createdOrUpdatedDate", Sort.DESCENDING);
-
-        return translationDTOs;
     }
 }

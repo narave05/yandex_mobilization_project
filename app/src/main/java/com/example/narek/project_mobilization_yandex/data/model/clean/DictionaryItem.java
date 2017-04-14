@@ -1,44 +1,52 @@
 package com.example.narek.project_mobilization_yandex.data.model.clean;
 
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dao.DictionaryDao;
+import com.example.narek.project_mobilization_yandex.data.model.dao.DictionaryItemDao;
+import com.example.narek.project_mobilization_yandex.data.model.dao.TranslationItemDao;
 import com.example.narek.project_mobilization_yandex.data.model.rest.DictionaryResponse;
-
-import org.parceler.Parcel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.DictionaryItemRealmProxy;
 import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.TranslationDTORealmProxy;
 
-@Parcel(implementations = {DictionaryItemRealmProxy.class},
-        value = Parcel.Serialization.BEAN,
-        analyze = {DictionaryItem.class})
 
-public class DictionaryItem extends RealmObject {
+public class DictionaryItem implements Serializable {
 
     // FIXME: 11.04.2017 primary key chkas
-    private  String mPartOfSpeech;
-    private RealmList<TranslationItem> mItemList;
+    private String mPartOfSpeech;
+    private List<TranslationItem> mItemList;
 
     public DictionaryItem() {
 
     }
-
+    public DictionaryItem(DictionaryItemDao dictionaryItemDao) {
+        mPartOfSpeech = dictionaryItemDao.getPartOfSpeech();
+        mItemList = generateTranslationItemList(dictionaryItemDao.getTranslationList());
+    }
     public DictionaryItem(DictionaryResponse.Def dictionaryResponse) {
         mPartOfSpeech = dictionaryResponse.getPartOfSpeech();
         mItemList = generateTranslationItems(dictionaryResponse.getTranslatedList());
     }
 
-    private RealmList<TranslationItem> generateTranslationItems(List<DictionaryResponse.Tr> translatedList) {
+    private List<TranslationItem> generateTranslationItems(List<DictionaryResponse.Tr> translatedList) {
         if (translatedList == null) {
             return null;
         }
-        RealmList<TranslationItem> items = new RealmList<>();
+        List<TranslationItem> items = new ArrayList<>();
         for (DictionaryResponse.Tr tr : translatedList) {
+            items.add(new TranslationItem(tr));
+        }
+        return items;
+    }
+
+    private List<TranslationItem> generateTranslationItemList(List<TranslationItemDao> translatedList) {
+        if (translatedList == null) {
+            return null;
+        }
+        List<TranslationItem> items = new ArrayList<>();
+        for (TranslationItemDao tr : translatedList) {
             items.add(new TranslationItem(tr));
         }
         return items;
@@ -54,7 +62,7 @@ public class DictionaryItem extends RealmObject {
 
     @Override
     public String toString() {
-        return "DictionaryItem{" +
+        return "DictionaryItemDao{" +
                 "mPartOfSpeech='" + mPartOfSpeech + '\'' +
                 ", mItemList=" + mItemList +
                 '}';

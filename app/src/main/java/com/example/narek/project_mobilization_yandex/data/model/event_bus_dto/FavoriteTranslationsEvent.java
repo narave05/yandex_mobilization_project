@@ -4,17 +4,17 @@ import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationD
 
 import java.util.List;
 
-public class AllTranslationsEvent {
+public class FavoriteTranslationsEvent {
 
     String mError;
     List<TranslationDTO> mTranslationDTOs;
 
-    public AllTranslationsEvent(String error) {
+    public FavoriteTranslationsEvent(String error) {
         mError = error;
     }
 
 
-    public AllTranslationsEvent(List<TranslationDTO> translationDTOs) {
+    public FavoriteTranslationsEvent(List<TranslationDTO> translationDTOs) {
         mTranslationDTOs = translationDTOs;
     }
 

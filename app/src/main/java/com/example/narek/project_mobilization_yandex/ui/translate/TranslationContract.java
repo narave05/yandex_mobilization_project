@@ -3,7 +3,8 @@ package com.example.narek.project_mobilization_yandex.ui.translate;
 import android.content.Intent;
 
 import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
-import com.example.narek.project_mobilization_yandex.ui.base.base_repository.BaseRepositoryContract;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryContract;
 
 
 interface TranslationContract {
@@ -16,11 +17,15 @@ interface TranslationContract {
 
         void resetTranslationView();
 
-        void startLanguageListActivity(int languageListType,String checkedLanguageCod);
+        void startLanguageListActivity(int languageListType, String checkedLanguageCod);
 
         void updateToolbarLanguages(String firstLang, String secondLang);
 
         void updateInputTranslationText(String text);
+
+        void showFavoriteIcon(boolean isFavorite);
+
+        void hideFavoriteIcon();
 
     }
 
@@ -33,6 +38,8 @@ interface TranslationContract {
         void handleCancelInputData();
 
         void handleLanguageSelectOrSwap(int id);
+
+        void handleFavoriteClick();
 
         void handleOnActivityResult(int requestCode, int resultCode, Intent data);
     }

@@ -2,20 +2,15 @@ package com.example.narek.project_mobilization_yandex.ui.history_and_favorite.hi
 
 
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
-import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.HistoryAndFavoriteAdapter;
+import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.HistoryAndFavoriteBaseAdapter;
 
 import java.util.List;
 
-public class HistoryListAdapter extends HistoryAndFavoriteAdapter {
+public class HistoryListAdapter extends HistoryAndFavoriteBaseAdapter {
 
 
     public HistoryListAdapter(List<TranslationDTO> translationDTOList, OnItemClickListener onItemClickListener) {
         super(translationDTOList, onItemClickListener);
-    }
-
-    @Override
-    protected void notifyClickedItem(int position) {
-        notifyItemChanged(position);
     }
 }
 

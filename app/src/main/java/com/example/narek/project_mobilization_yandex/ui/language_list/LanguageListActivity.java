@@ -13,7 +13,7 @@ import android.view.View;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
-import com.example.narek.project_mobilization_yandex.ui.base.base_repository.BaseRepositoryActivity;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryActivity;
 import com.example.narek.project_mobilization_yandex.ui.widget.LoadingView;
 import com.example.narek.project_mobilization_yandex.util.ViewHelper;
 
@@ -50,16 +50,18 @@ public class LanguageListActivity extends BaseRepositoryActivity<LanguageListCon
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_language_list);
 
-        String checkedLanguageCod = null;
+
         Intent intent = getIntent();
         if (intent != null) {
             mLanguageListType = intent.getIntExtra(LANGUAGE_LIST_TYPE_INTENT_KEY, 0);
-            checkedLanguageCod = intent.getStringExtra(CHECKED_LANGUAGE_INTENT_KEY);
+            String checkedLanguageCod = intent.getStringExtra(CHECKED_LANGUAGE_INTENT_KEY);
+            presenter.init(checkedLanguageCod);
         }
-        presenter.startLoadData(checkedLanguageCod);
+        presenter.startLoadData();
 
         initToolBar();
     }
+
 
     @NonNull
     @Override
@@ -110,13 +112,6 @@ public class LanguageListActivity extends BaseRepositoryActivity<LanguageListCon
     @Override
     public void onItemClickListener(Language language) {
         presenter.handleLanguageSelected(language);
-    }
-
-    private void initFields() {
-        Intent intent = getIntent();
-        if (intent != null) {
-            mLanguageListType = intent.getIntExtra(LANGUAGE_LIST_TYPE_INTENT_KEY, 0);
-        }
     }
 
     private void initToolBar() {

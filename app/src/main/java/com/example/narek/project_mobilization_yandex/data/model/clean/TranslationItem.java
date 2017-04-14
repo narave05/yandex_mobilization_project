@@ -1,30 +1,30 @@
 package com.example.narek.project_mobilization_yandex.data.model.clean;
 
+import com.example.narek.project_mobilization_yandex.data.model.dao.ExampleDao;
+import com.example.narek.project_mobilization_yandex.data.model.dao.SynonymDao;
+import com.example.narek.project_mobilization_yandex.data.model.dao.TranslationItemDao;
 import com.example.narek.project_mobilization_yandex.data.model.rest.DictionaryResponse;
-
-import org.parceler.Parcel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.TranslationItemRealmProxy;
-
-@Parcel(implementations = {TranslationItemRealmProxy.class},
-        value = Parcel.Serialization.BEAN,
-        analyze = {TranslationItem.class})
-public class TranslationItem extends RealmObject {
+public class TranslationItem implements Serializable {
 
 
-    private RealmList<Synonym> mSynonymList;
-    private RealmList<RealmString> mMeanList;
-    private RealmList<Example> mExampleList;
+    private List<Synonym> mSynonymList;
+    private List<String> mMeanList;
+    private List<Example> mExampleList;
 
 
     public TranslationItem() {
 
+    }
+
+    public TranslationItem(TranslationItemDao translationItemDao) {
+        mSynonymList = generateSynonymItemList(translationItemDao.getSynonymDaoList());
+        mMeanList = translationItemDao.getMeanList();
+        mExampleList = generateExampleItemList(translationItemDao.getExampleDaoList());
     }
 
     public TranslationItem(DictionaryResponse.Tr tr) {
@@ -33,9 +33,9 @@ public class TranslationItem extends RealmObject {
         mExampleList = generateExampleItems(tr.getExampleList());
     }
 
-    private RealmList<Synonym> generateSynonymItems(String translatedText, String gen,
-                                                    List<DictionaryResponse.Syn> synonymList) {
-        RealmList<Synonym> items = new RealmList<>();
+    private List<Synonym> generateSynonymItems(String translatedText, String gen,
+                                               List<DictionaryResponse.Syn> synonymList) {
+        List<Synonym> items = new ArrayList<>();
         items.add(new Synonym(translatedText, gen));
 
         if (synonymList != null) {
@@ -47,29 +47,58 @@ public class TranslationItem extends RealmObject {
         return items;
     }
 
-    private RealmList<RealmString> generateMeanItems(List<DictionaryResponse.Mean> meanList) {
+    private List<Synonym> generateSynonymItemList(List<SynonymDao> synonymList) {
 
-        if (meanList == null) {
+        if (synonymList == null) {
             return null;
         }
+        List<Synonym> items = new ArrayList<>();
 
-        RealmList<RealmString> items = new RealmList<>();
-        for (DictionaryResponse.Mean mean : meanList) {
-            items.add(new RealmString(mean.getText()));
+        for (SynonymDao syn : synonymList) {
+            items.add(new Synonym(syn));
         }
 
         return items;
     }
 
-    private RealmList<Example> generateExampleItems(List<DictionaryResponse.Ex> exampleList) {
+    private List<String> generateMeanItems(List<DictionaryResponse.Mean> meanList) {
+
+        if (meanList == null) {
+            return null;
+        }
+
+        List<String> items = new ArrayList<>();
+        for (DictionaryResponse.Mean mean : meanList) {
+            items.add(mean.getText());
+        }
+
+        return items;
+    }
+
+    private List<Example> generateExampleItems(List<DictionaryResponse.Ex> exampleList) {
 
 
         if (exampleList == null) {
             return null;
         }
 
-        RealmList<Example> items = new RealmList<>();
+        List<Example> items = new ArrayList<>();
         for (DictionaryResponse.Ex ex : exampleList) {
+            items.add(new Example(ex));
+        }
+
+        return items;
+    }
+
+    private List<Example> generateExampleItemList(List<ExampleDao> exampleList) {
+
+
+        if (exampleList == null) {
+            return null;
+        }
+
+        List<Example> items = new ArrayList<>();
+        for (ExampleDao ex : exampleList) {
             items.add(new Example(ex));
         }
 
@@ -81,17 +110,7 @@ public class TranslationItem extends RealmObject {
     }
 
     public List<String> getMeanList() {
-
-        if (mMeanList == null) {
-            return null;
-        }
-
-        List<String> list = new ArrayList<>();
-        for (RealmString realmString : mMeanList) {
-            list.add(realmString.getString());
-        }
-
-        return list;
+        return mMeanList;
     }
 
     public List<Example> getExampleList() {
@@ -100,7 +119,7 @@ public class TranslationItem extends RealmObject {
 
     @Override
     public String toString() {
-        return "TranslationItem{" +
+        return "TranslationItemDao{" +
                 "mSynonymList=" + mSynonymList +
                 ", mMeanList=" + mMeanList +
                 ", mExampleList=" + mExampleList +

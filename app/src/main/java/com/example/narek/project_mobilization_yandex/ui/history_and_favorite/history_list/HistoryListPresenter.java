@@ -1,16 +1,13 @@
 package com.example.narek.project_mobilization_yandex.ui.history_and_favorite.history_list;
 
-import android.util.Log;
-
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
-import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.SaveTranslationEvent;
-import com.example.narek.project_mobilization_yandex.ui.base.base_repository.BaseRepositoryPresenter;
+import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.AllTranslationsEvent;
+import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.TranslatedEvent;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryPresenter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 class HistoryListPresenter extends BaseRepositoryPresenter<HistoryListContract.IView>
         implements HistoryListContract.IPresenter {
@@ -18,24 +15,6 @@ class HistoryListPresenter extends BaseRepositoryPresenter<HistoryListContract.I
     @Override
     public void init() {
         findHistory();
-    }
-
-    private void findHistory() {
-        List<TranslationDTO> historyList = getRepository().getHistoryList();
-        if (isViewAttached() && historyList != null) {
-            getView().showHistoryList(historyList);
-        }
-    }
-
-    @Override
-    public void handleFavoriteStatusChanged(String primaryKey, boolean isChecked) {
-        getRepository().updateTranslationFavoriteStatus(primaryKey, isChecked);
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSaveTranslationEvent(SaveTranslationEvent event) {
-        Log.e("onSaveEvent: ", " " + "onSaveEvent");
     }
 
     @Override
@@ -46,5 +25,50 @@ class HistoryListPresenter extends BaseRepositoryPresenter<HistoryListContract.I
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void handleFavoriteStatusChanged(TranslationDTO translationDTO) {
+        getRepository().updateTranslationFavoriteStatusAsync(translationDTO.getPrimaryKey(), translationDTO.isFavorite());
+        EventBus.getDefault().postSticky(translationDTO);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoadHistoryListEvent(AllTranslationsEvent event) {
+        if (event.getError() == null) {
+            if (isViewAttached()) {
+                getView().hideProgress();
+                getView().showHistoryList(event.getTranslationDTOs());
+            }
+        } else {
+            if (isViewAttached()) {
+                getView().hideProgress();
+                getView().showError(event.getError());
+            }
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoadTranslationEvent(TranslatedEvent event) {
+        if (event.getError() == null) {
+            if (isViewAttached()) {
+                getView().insertedOrAddHistoryList(event.getTranslationDTO());
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFavoriteStatusChangedEvent(TranslationDTO event) {
+        if (isViewAttached()) {
+            getView().updateHistoryList(event);
+        }
+    }
+
+    private void findHistory() {
+        if (isViewAttached()) {
+            getView().showProgress();
+        }
+        getRepository().getHistoryListAsync();
     }
 }

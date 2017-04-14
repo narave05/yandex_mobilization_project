@@ -2,10 +2,13 @@ package com.example.narek.project_mobilization_yandex.ui.translate;
 
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +17,8 @@ import android.widget.TextView;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
-import com.example.narek.project_mobilization_yandex.ui.base.base_repository.BaseRepositoryFragment;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryFragment;
 import com.example.narek.project_mobilization_yandex.ui.language_list.LanguageListActivity;
 import com.example.narek.project_mobilization_yandex.ui.widget.DictionaryView;
 import com.example.narek.project_mobilization_yandex.ui.widget.LoadingView;
@@ -58,6 +62,9 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
 
     @BindView(R.id.second_lang_id)
     TextView mSecondLangText;
+
+    @BindView(R.id.fav_icon)
+    AppCompatImageView favoriteIcon;
 
     Unregistrar mUnregistrar;
 
@@ -167,6 +174,23 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
     }
 
     @Override
+    public void showFavoriteIcon(boolean isFavorite) {
+        int color ;
+        if (isFavorite) {
+            color = ContextCompat.getColor(getActivity(),R.color.fav_active_icon_color);
+        } else {
+            color = ContextCompat.getColor(getActivity(),R.color.fav_inactive_icon_color);
+        }
+        favoriteIcon.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        favoriteIcon.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideFavoriteIcon() {
+        favoriteIcon.setVisibility(View.GONE);
+    }
+
+    @Override
     public void showTranslation(String text) {
         mTranslatedText.setText(text);
     }
@@ -181,6 +205,11 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
     @OnClick({R.id.switch_icon, R.id.first_lang_id, R.id.second_lang_id})
     public void onViewClicked(View view) {
         presenter.handleLanguageSelectOrSwap(view.getId());
+    }
+
+    @OnClick(R.id.fav_icon)
+    public void onFavoriteIconClicked(View view) {
+        presenter.handleFavoriteClick();
     }
 
     private void registerKeyboardVisibilityEvent() {

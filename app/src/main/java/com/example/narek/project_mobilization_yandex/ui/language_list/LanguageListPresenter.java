@@ -1,10 +1,15 @@
 package com.example.narek.project_mobilization_yandex.ui.language_list;
 
 import android.os.Handler;
+import android.util.Log;
 
-import com.example.narek.project_mobilization_yandex.data.interfaces.ResultCallback;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
-import com.example.narek.project_mobilization_yandex.ui.base.base_repository.BaseRepositoryPresenter;
+import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.AvailableLanguageEvent;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryPresenter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -12,14 +17,34 @@ import java.util.List;
 class LanguageListPresenter extends BaseRepositoryPresenter<LanguageListContract.IView>
         implements LanguageListContract.IPresenter {
 
+    private String mCheckedLanguageCod;
+
     @Override
     public void onCreate() {
         super.onCreate();
     }
 
     @Override
-    public void startLoadData(String checkedLanguageCod) {
-        getLanguageList(checkedLanguageCod);
+    public void onStart() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void init(String checkedLanguageCod) {
+        mCheckedLanguageCod = checkedLanguageCod;
+    }
+
+    @Override
+    public void startLoadData() {
+        if (isViewAttached()) {
+            getView().showProgress();
+        }
+        getLanguageList();
     }
 
     @Override
@@ -38,32 +63,33 @@ class LanguageListPresenter extends BaseRepositoryPresenter<LanguageListContract
         }
     }
 
-    private void getLanguageList(final String checkedLanguageCod) {
-        getRepository().getAvailableLanguageListInBackground(new ResultCallback<List<Language>>() {
-            @Override
-            public void onStart() {
-                if (isViewAttached()) {
-                    getView().showProgress();
-                }
-            }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoadLanguageListEvent(AvailableLanguageEvent event) {
+        Log.e("onLoadEvent: ", " " + "onLoadEvent");
+        if (event.getError() == null) {
+            showLanguageList(event.getLanguageList());
+        } else {
+            showError(event.getError());
+        }
+    }
 
-            @Override
-            public void onResult(List<Language> data) {
-                if (isViewAttached()) {
-                    getView().hideProgress();
-                    int checkedLanguageIndex = getCheckedLanguageIndex(checkedLanguageCod, data);
-                    getView().showLanguageList(data, checkedLanguageIndex);
-                }
-            }
+    private void getLanguageList() {
+        getRepository().getAvailableLanguageListAsync();
+    }
 
-            @Override
-            public void onError(Throwable error) {
-                if (isViewAttached()) {
-                    getView().hideProgress();
-                    getView().showError(error.getMessage());
-                }
-            }
-        });
+    private void showError(String error) {
+        if (isViewAttached()) {
+            getView().hideProgress();
+            getView().showError(error);
+        }
+    }
+
+    private void showLanguageList(List<Language> data) {
+        if (isViewAttached()) {
+            getView().hideProgress();
+            int checkedLanguageIndex = getCheckedLanguageIndex(mCheckedLanguageCod, data);
+            getView().showLanguageList(data, checkedLanguageIndex);
+        }
     }
 
     private int getCheckedLanguageIndex(String checkedLanguageCod, List<Language> languages) {
@@ -85,15 +111,5 @@ class LanguageListPresenter extends BaseRepositoryPresenter<LanguageListContract
                 }
             }
         }, 200);
-    }
-
-    @Override
-    public void onStart() {
-
-    }
-
-    @Override
-    public void onStop() {
-
     }
 }

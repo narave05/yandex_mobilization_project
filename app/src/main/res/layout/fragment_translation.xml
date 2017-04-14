@@ -1,5 +1,6 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,25 +21,43 @@
             android:layout_margin="10dp"
             android:background="@drawable/translation_input_bg"/>
 
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/translated_text_scroll"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:scrollbars="none">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
-            <TextView
-                android:id="@+id/translated_text"
-                android:layout_width="wrap_content"
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/translated_text_scroll"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginRight="30dp"
                 android:clickable="true"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"/>
-        </android.support.v4.widget.NestedScrollView>
+                android:scrollbars="none">
+
+                <TextView
+                    android:id="@+id/translated_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
+                    android:clickable="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"/>
+            </android.support.v4.widget.NestedScrollView>
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/fav_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:padding="3dp"
+                android:tint="@color/color4"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_tab_fav"/>
+
+        </RelativeLayout>
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/root_scroll_view"

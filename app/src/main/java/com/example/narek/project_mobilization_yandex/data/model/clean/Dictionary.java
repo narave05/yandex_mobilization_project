@@ -1,26 +1,26 @@
 package com.example.narek.project_mobilization_yandex.data.model.clean;
 
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dao.DictionaryDao;
+import com.example.narek.project_mobilization_yandex.data.model.dao.DictionaryItemDao;
 import com.example.narek.project_mobilization_yandex.data.model.rest.DictionaryResponse;
 
-import org.parceler.Parcel;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.DictionaryRealmProxy;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.TranslationDTORealmProxy;
 
-
-public class Dictionary extends RealmObject{
+public class Dictionary implements Serializable {
 
     private String mOriginalText;
     private String mTranscription;
-    private RealmList<DictionaryItem> mDictionaryItems;
+    private List<DictionaryItem> mDictionaryItems;
 
     public Dictionary() {
+    }
+    public Dictionary(DictionaryDao dictionaryDao) {
+        mOriginalText = dictionaryDao.getOriginalText();
+        mTranscription = dictionaryDao.getTranscription();
+        mDictionaryItems = generateDictionaryItems(dictionaryDao.getDictionaryItemDaos());
     }
 
     public Dictionary(List<DictionaryResponse.Def> dictionaryResponses) {
@@ -28,7 +28,7 @@ public class Dictionary extends RealmObject{
             DictionaryResponse.Def dictionaryResponse = dictionaryResponses.get(0);
             mOriginalText = dictionaryResponse.getText();
             mTranscription = dictionaryResponse.getTranscription();
-            mDictionaryItems = generateDictionaryItems(dictionaryResponses);
+            mDictionaryItems = generateDictionaryItemList(dictionaryResponses);
         } else {
             mOriginalText = null;
             mTranscription = null;
@@ -48,12 +48,23 @@ public class Dictionary extends RealmObject{
         return mDictionaryItems;
     }
 
-    private RealmList<DictionaryItem> generateDictionaryItems(List<DictionaryResponse.Def> list) {
+    private List<DictionaryItem> generateDictionaryItemList(List<DictionaryResponse.Def> list) {
         if (list == null) {
             return null;
         }
-        RealmList<DictionaryItem> items = new RealmList<>();
+        List<DictionaryItem> items = new ArrayList<>();
         for (DictionaryResponse.Def def : list) {
+            items.add(new DictionaryItem(def));
+        }
+        return items;
+    }
+
+    private List<DictionaryItem> generateDictionaryItems(List<DictionaryItemDao> list) {
+        if (list == null) {
+            return null;
+        }
+        List<DictionaryItem> items = new ArrayList<>();
+        for (DictionaryItemDao def : list) {
             items.add(new DictionaryItem(def));
         }
         return items;
@@ -61,7 +72,7 @@ public class Dictionary extends RealmObject{
 
     @Override
     public String toString() {
-        return "Dictionary{" +
+        return "DictionaryDao{" +
                 "mOriginalText='" + mOriginalText + '\'' +
                 ", mTranscription='" + mTranscription + '\'' +
                 ", mDictionaryItems=" + mDictionaryItems +

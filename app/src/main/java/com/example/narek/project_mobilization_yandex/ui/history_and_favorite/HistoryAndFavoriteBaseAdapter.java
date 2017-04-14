@@ -4,9 +4,9 @@ package com.example.narek.project_mobilization_yandex.ui.history_and_favorite;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,21 +20,23 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public abstract class HistoryAndFavoriteAdapter extends RecyclerView.Adapter<HistoryAndFavoriteAdapter.HistoryViewHolder> {
+public abstract class HistoryAndFavoriteBaseAdapter extends RecyclerView.Adapter<HistoryAndFavoriteBaseAdapter.HistoryViewHolder> {
 
-    private List<TranslationDTO> mTranslationDTOList;
+    protected List<TranslationDTO> mTranslationDTOList;
     private OnItemClickListener mOnItemClickListener;
+    private RecyclerView mRecyclerView;
 
-    public HistoryAndFavoriteAdapter(List<TranslationDTO> translationDTOList, OnItemClickListener onItemClickListener) {
+    public HistoryAndFavoriteBaseAdapter(List<TranslationDTO> translationDTOList, OnItemClickListener onItemClickListener) {
         mTranslationDTOList = translationDTOList;
         mOnItemClickListener = onItemClickListener;
     }
 
     @Override
     public HistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        mRecyclerView = ((RecyclerView) parent);
         View inflatedView = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.history_and_favorite_item, parent, false);
-       final HistoryViewHolder historyViewHolder = new HistoryViewHolder(inflatedView);
+        final HistoryViewHolder historyViewHolder = new HistoryViewHolder(inflatedView);
         historyViewHolder.mFavImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,16 +49,44 @@ public abstract class HistoryAndFavoriteAdapter extends RecyclerView.Adapter<His
 
     private void onFavoriteIconClick(HistoryViewHolder historyViewHolder) {
         if (historyViewHolder.getAdapterPosition() != RecyclerView.NO_POSITION) {
-                final TranslationDTO translationDTO = mTranslationDTOList.get(historyViewHolder.getAdapterPosition());
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClickListener(translationDTO.getPrimaryKey(), !translationDTO.isFavorite());
-                    notifyClickedItem(historyViewHolder.getAdapterPosition());
-                }
+            final TranslationDTO translationDTO = mTranslationDTOList.get(historyViewHolder.getAdapterPosition());
+            if (mOnItemClickListener != null) {
+                translationDTO.setFavorite(!translationDTO.isFavorite());
+                mOnItemClickListener.onItemClickListener(translationDTO);
+            }
         }
     }
 
-    protected abstract void notifyClickedItem(int position);
+    public void insertedOrUpdatePositionItem(TranslationDTO translationDTO) {
+        int index = mTranslationDTOList.indexOf(translationDTO);
+        if (index > -1) {
+            mTranslationDTOList.remove(index);
+            notifyItemRemoved(index);
+        }
+        addFirst(translationDTO);
+    }
 
+    public void updateItem(TranslationDTO translationDTO) {
+        int index = mTranslationDTOList.indexOf(translationDTO);
+        if (index > -1) {
+            mTranslationDTOList.set(index, translationDTO);
+            notifyItemChanged(index);
+        }
+    }
+
+    public void addFirst(TranslationDTO translationDTO) {
+        mTranslationDTOList.add(0, translationDTO);
+        notifyItemInserted(0);
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
+    public void removeItem(TranslationDTO translationDTO) {
+        int index = mTranslationDTOList.indexOf(translationDTO);
+        if (index > -1) {
+            mTranslationDTOList.remove(index);
+            notifyItemRemoved(index);
+        }
+    }
 
     @Override
     public void onBindViewHolder(final HistoryViewHolder holder, int position) {
@@ -97,18 +127,18 @@ public abstract class HistoryAndFavoriteAdapter extends RecyclerView.Adapter<His
             mOriginalText.setText(translationDTO.getOriginalText());
             mTranslatedText.setText(translationDTO.getTranslatedTextList().get(0));
             mLanguagePairCodText.setText(translationDTO.getLanguagePairCodText().toUpperCase());
-
-            // TODO: 12.04.2017 move to color recurse
+            int color;
             if (translationDTO.isFavorite()) {
-                mFavImage.setColorFilter(Color.parseColor("#ffcc00"), PorterDuff.Mode.SRC_IN);
+                color = ContextCompat.getColor(mContext, R.color.fav_active_icon_color);
             } else {
-                mFavImage.setColorFilter(Color.parseColor("#858e98"), PorterDuff.Mode.SRC_IN);
+                color = ContextCompat.getColor(mContext, R.color.fav_inactive_icon_color);
             }
+            mFavImage.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
     }
 
     public interface OnItemClickListener {
-        void onItemClickListener(String primaryKey, boolean isChecked);
+        void onItemClickListener(TranslationDTO translationDTO);
     }
 }
 

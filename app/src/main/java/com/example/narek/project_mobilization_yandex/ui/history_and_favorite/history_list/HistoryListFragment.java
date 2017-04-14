@@ -11,9 +11,10 @@ import android.view.ViewGroup;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
-import com.example.narek.project_mobilization_yandex.ui.base.base_repository.BaseRepositoryFragment;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryFragment;
 import com.example.narek.project_mobilization_yandex.ui.widget.LoadingView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -73,8 +74,8 @@ public class HistoryListFragment extends BaseRepositoryFragment<HistoryListContr
     }
 
     @Override
-    public void onItemClickListener(String primaryKey, boolean isChecked) {
-        presenter.handleFavoriteStatusChanged(primaryKey,isChecked);
+    public void onItemClickListener(TranslationDTO translationDTO) {
+        presenter.handleFavoriteStatusChanged(translationDTO);
     }
 
     @Override
@@ -84,6 +85,22 @@ public class HistoryListFragment extends BaseRepositoryFragment<HistoryListContr
         } else {
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void insertedOrAddHistoryList(TranslationDTO translationDTO) {
+        if (mAdapter == null) {
+            List<TranslationDTO> list = new ArrayList<>();
+            list.add(translationDTO);
+            setupAdapter(list);
+        } else {
+            mAdapter.insertedOrUpdatePositionItem(translationDTO);
+        }
+    }
+
+    @Override
+    public void updateHistoryList(TranslationDTO translationDTO) {
+        mAdapter.updateItem(translationDTO);
     }
 
     private void setupAdapter(List<TranslationDTO> translationDTOList) {
