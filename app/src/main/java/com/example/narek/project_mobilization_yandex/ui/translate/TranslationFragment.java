@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryFragment;
 import com.example.narek.project_mobilization_yandex.ui.language_list.LanguageListActivity;
 import com.example.narek.project_mobilization_yandex.ui.widget.DictionaryView;
@@ -175,11 +174,11 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
 
     @Override
     public void showFavoriteIcon(boolean isFavorite) {
-        int color ;
+        int color;
         if (isFavorite) {
-            color = ContextCompat.getColor(getActivity(),R.color.fav_active_icon_color);
+            color = ContextCompat.getColor(getActivity(), R.color.fav_active_icon_color);
         } else {
-            color = ContextCompat.getColor(getActivity(),R.color.fav_inactive_icon_color);
+            color = ContextCompat.getColor(getActivity(), R.color.fav_inactive_icon_color);
         }
         favoriteIcon.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         favoriteIcon.setVisibility(View.VISIBLE);

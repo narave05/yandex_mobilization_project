@@ -13,11 +13,17 @@ import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryFragment;
 import com.example.narek.project_mobilization_yandex.ui.widget.LoadingView;
+import com.example.narek.project_mobilization_yandex.ui.widget.SearchView;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
+import net.yslibrary.android.keyboardvisibilityevent.Unregistrar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnTextChanged;
 
 public class FavoriteListFragment extends BaseRepositoryFragment<FavoriteListContract.IView, FavoriteListContract.IPresenter>
         implements FavoriteListContract.IView, FavoriteListAdapter.OnItemClickListener {
@@ -27,7 +33,12 @@ public class FavoriteListFragment extends BaseRepositoryFragment<FavoriteListCon
 
     @BindView(R.id.loading_view)
     LoadingView mLoadingView;
+
+    @BindView(R.id.search_bar)
+    SearchView mSearchView;
+
     private FavoriteListAdapter mAdapter;
+    private Unregistrar mUnregistrar;
 
     public static FavoriteListFragment newInstance() {
         FavoriteListFragment fragment = new FavoriteListFragment();
@@ -50,6 +61,7 @@ public class FavoriteListFragment extends BaseRepositoryFragment<FavoriteListCon
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.init();
+        registerKeyboardVisibilityEvent();
     }
 
     @Override
@@ -98,6 +110,11 @@ public class FavoriteListFragment extends BaseRepositoryFragment<FavoriteListCon
         mAdapter.removeItem(translationDTO);
     }
 
+    @OnTextChanged(R.id.search_view)
+    protected void onTextChanged(CharSequence text) {
+        mAdapter.getFilter().filter(text);
+    }
+
 
     private void setupAdapter(List<TranslationDTO> translationDTOList) {
         mRecyclerView.setVisibility(View.VISIBLE);
@@ -107,5 +124,15 @@ public class FavoriteListFragment extends BaseRepositoryFragment<FavoriteListCon
         mRecyclerView.setLayoutManager(layoutManager);
     }
 
+    private void registerKeyboardVisibilityEvent() {
+        mUnregistrar = KeyboardVisibilityEvent.registerEventListener(getActivity(), new KeyboardVisibilityEventListener() {
+            @Override
+            public void onVisibilityChanged(boolean isOpen) {
+                if (!isOpen) {
+                    mSearchView.cancelViewFocus();
+                }
+            }
+        });
+    }
 
 }

@@ -6,4 +6,5 @@
     <string name="trnsliationInputHintText">Введите текст</string>
     <string name="language_list_tollbar_first_text">Язык текста</string>
     <string name="language_list_tollbar_second_text">Язык перевода</string>
+    <string name="search_hint_text">Найти в истории</string>
 </resources>

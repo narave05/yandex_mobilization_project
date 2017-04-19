@@ -30,6 +30,8 @@ public class TranslationInputView extends RelativeLayout implements TextWatcher 
     private TextChangListener mTextChangListener;
     private OnCancelClick mOnCancelClick;
 
+    private boolean isSetTranslation;
+
 
     public TranslationInputView(@NonNull Context context) {
         super(context);
@@ -59,13 +61,24 @@ public class TranslationInputView extends RelativeLayout implements TextWatcher 
 
     @Override
     public void onTextChanged(final CharSequence s, int start, int before, int count) {
-        if (!s.toString().isEmpty()) {
+
+        String string = s.toString().trim();
+        if (!string.isEmpty()) {
             mImageView.setVisibility(VISIBLE);
+
+            if (isSetTranslation) {
+                if (mTextChangListener != null) {
+                    mTextChangListener.onTextChanged(string);
+                }
+                isSetTranslation = false;
+            } else {
+                scheduleTextChang(string);
+            }
 
         } else {
             mImageView.setVisibility(GONE);
         }
-        scheduleTextChang(s);
+
     }
 
     @Override
@@ -159,6 +172,7 @@ public class TranslationInputView extends RelativeLayout implements TextWatcher 
     }
 
     public void setTranslationInputText(String text) {
+        isSetTranslation = true;
         mTranslationInputText.setText(text);
     }
 

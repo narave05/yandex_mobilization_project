@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.AppCompatImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/close_icon"
+    android:layout_width="60dp"
+    android:layout_height="50dp"
+    android:layout_gravity="end"
+    android:background="?selectableItemBackground"
+    android:clickable="true"
+    android:paddingLeft="17dp"
+    android:paddingRight="17dp"
+    android:visibility="gone"
+    app:srcCompat="@drawable/close"/>

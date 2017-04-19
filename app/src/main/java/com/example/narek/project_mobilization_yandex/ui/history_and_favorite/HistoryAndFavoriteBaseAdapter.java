@@ -2,7 +2,6 @@ package com.example.narek.project_mobilization_yandex.ui.history_and_favorite;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
@@ -10,24 +9,32 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public abstract class HistoryAndFavoriteBaseAdapter extends RecyclerView.Adapter<HistoryAndFavoriteBaseAdapter.HistoryViewHolder> {
+public class HistoryAndFavoriteBaseAdapter
+        extends RecyclerView.Adapter<HistoryAndFavoriteBaseAdapter.HistoryViewHolder>
+        implements Filterable {
 
     protected List<TranslationDTO> mTranslationDTOList;
+    protected List<TranslationDTO> mOriginalTranslationDOTList;
+    private SearchFilter mSearchFilter;
     private OnItemClickListener mOnItemClickListener;
     private RecyclerView mRecyclerView;
 
     public HistoryAndFavoriteBaseAdapter(List<TranslationDTO> translationDTOList, OnItemClickListener onItemClickListener) {
         mTranslationDTOList = translationDTOList;
+        mOriginalTranslationDOTList = translationDTOList;
         mOnItemClickListener = onItemClickListener;
     }
 
@@ -80,10 +87,16 @@ public abstract class HistoryAndFavoriteBaseAdapter extends RecyclerView.Adapter
         mRecyclerView.smoothScrollToPosition(0);
     }
 
+    public void addNewList(List<TranslationDTO> newList) {
+        mTranslationDTOList = newList;
+        notifyDataSetChanged();
+    }
+
     public void removeItem(TranslationDTO translationDTO) {
         int index = mTranslationDTOList.indexOf(translationDTO);
         if (index > -1) {
             mTranslationDTOList.remove(index);
+            mOriginalTranslationDOTList.remove(translationDTO);
             notifyItemRemoved(index);
         }
     }
@@ -99,6 +112,17 @@ public abstract class HistoryAndFavoriteBaseAdapter extends RecyclerView.Adapter
         return mTranslationDTOList.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        if (mSearchFilter == null) {
+            mSearchFilter = new SearchFilter(this);
+        }
+        return mSearchFilter;
+    }
+
+    public List<TranslationDTO> getOriginalTranslationDOTList() {
+        return mOriginalTranslationDOTList;
+    }
 
     public static class HistoryViewHolder extends RecyclerView.ViewHolder {
 
@@ -137,8 +161,48 @@ public abstract class HistoryAndFavoriteBaseAdapter extends RecyclerView.Adapter
         }
     }
 
+
+    private static class SearchFilter extends Filter {
+        HistoryAndFavoriteBaseAdapter mAdapter;
+
+        public SearchFilter(HistoryAndFavoriteBaseAdapter adapter) {
+            mAdapter = adapter;
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            List<TranslationDTO> originalList = mAdapter.getOriginalTranslationDOTList();
+            if (constraint != null && constraint.length() > 0) {
+                List<TranslationDTO> filteredList = new ArrayList<>();
+                for (TranslationDTO translationDTO : originalList) {
+                    if (containsIgnoreCase(translationDTO, constraint.toString())) {
+                        filteredList.add(translationDTO);
+                    }
+                }
+                results.count = filteredList.size();
+                results.values = filteredList;
+            } else {
+                results.count = originalList.size();
+                results.values = originalList;
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mAdapter.addNewList((List<TranslationDTO>) results.values);
+        }
+
+        private boolean containsIgnoreCase(TranslationDTO translationDTO, String queryText) {
+            return translationDTO.getOriginalText().toLowerCase().contains(queryText.toLowerCase()) ||
+                    translationDTO.getTranslatedTextList().get(0).toLowerCase().contains(queryText.toLowerCase());
+        }
+    }
+
     public interface OnItemClickListener {
         void onItemClickListener(TranslationDTO translationDTO);
     }
+
 }
 

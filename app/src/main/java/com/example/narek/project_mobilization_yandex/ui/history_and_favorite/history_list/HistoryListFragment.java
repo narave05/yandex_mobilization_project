@@ -13,11 +13,17 @@ import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryFragment;
 import com.example.narek.project_mobilization_yandex.ui.widget.LoadingView;
+import com.example.narek.project_mobilization_yandex.ui.widget.SearchView;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
+import net.yslibrary.android.keyboardvisibilityevent.Unregistrar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnTextChanged;
 
 public class HistoryListFragment extends BaseRepositoryFragment<HistoryListContract.IView, HistoryListContract.IPresenter>
         implements HistoryListContract.IView, HistoryListAdapter.OnItemClickListener {
@@ -27,7 +33,12 @@ public class HistoryListFragment extends BaseRepositoryFragment<HistoryListContr
 
     @BindView(R.id.loading_view)
     LoadingView mLoadingView;
+
+    @BindView(R.id.search_bar)
+    SearchView mSearchView;
+
     private HistoryListAdapter mAdapter;
+    private Unregistrar mUnregistrar;
 
     public static HistoryListFragment newInstance() {
         HistoryListFragment fragment = new HistoryListFragment();
@@ -50,6 +61,7 @@ public class HistoryListFragment extends BaseRepositoryFragment<HistoryListContr
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.init();
+        registerKeyboardVisibilityEvent();
 
     }
 
@@ -103,6 +115,11 @@ public class HistoryListFragment extends BaseRepositoryFragment<HistoryListContr
         mAdapter.updateItem(translationDTO);
     }
 
+    @OnTextChanged(R.id.search_view)
+    protected void onTextChanged(CharSequence text) {
+        mAdapter.getFilter().filter(text);
+    }
+
     private void setupAdapter(List<TranslationDTO> translationDTOList) {
         mRecyclerView.setVisibility(View.VISIBLE);
         mAdapter = new HistoryListAdapter(translationDTOList, this);
@@ -111,5 +128,15 @@ public class HistoryListFragment extends BaseRepositoryFragment<HistoryListContr
         mRecyclerView.setLayoutManager(layoutManager);
     }
 
+    private void registerKeyboardVisibilityEvent() {
+        mUnregistrar = KeyboardVisibilityEvent.registerEventListener(getActivity(), new KeyboardVisibilityEventListener() {
+            @Override
+            public void onVisibilityChanged(boolean isOpen) {
+                if (!isOpen) {
+                    mSearchView.cancelViewFocus();
+                }
+            }
+        });
+    }
 
 }

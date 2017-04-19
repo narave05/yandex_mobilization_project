@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.ui.base.BaseFragment;
+import com.example.narek.project_mobilization_yandex.util.ViewHelper;
 
 import butterknife.BindView;
 
@@ -60,5 +61,22 @@ public class HistoryAndFavoriteRootFragment extends BaseFragment<HistoryAndFavor
     private void setupViewPager(ViewPager viewPager) {
         HistoryAndFavoritePagerAdapter adapter = new HistoryAndFavoritePagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
+        // TODO: 19.04.2017
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ViewHelper.hideKeyboard(mViewpager);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 }

@@ -8,15 +8,20 @@
     <color name="color2">#8d634d</color>
     <color name="color3">#a37d92</color>
     <color name="color4">#9a9a9a</color>
+    <color name="search_input_text_color">#777777</color>
     <color name="color5">#cccccc</color>
     <color name="color6">#e5e5e5</color>
     <color name="input_text_color">#333333</color>
     <color name="close_icon_color">#858e98</color>
+    <color name="search_icon_color">#858e98</color>
     <color name="language_text_color">#2b2b2b</color>
     <color name="language_line_color">#e4e4e4</color>
     <color name="language_list_item_color">#f6f5f3</color>
     <color name="switch_twoway_icon_color">#222222</color>
     <color name="fav_active_icon_color">#ffcc00</color>
     <color name="fav_inactive_icon_color">#858e98</color>
+    <color name="history_fav_tab_indicator_color">#383838</color>
+    <color name="history_fav_tab_text_color">#383838</color>
+    <color name="history_fav_tab_inactive_text_color">#907f41</color>
 
 </resources>

@@ -10,6 +10,9 @@
         android:layout_height="?actionBarSize"
         android:background="@color/colorPrimary"
         app:tabIndicatorHeight="3dp"
+        app:tabIndicatorColor="@color/history_fav_tab_indicator_color"
+        app:tabTextColor="@color/history_fav_tab_inactive_text_color"
+        app:tabSelectedTextColor="@color/history_fav_tab_text_color"
         app:tabGravity="center"
         app:tabMode="fixed"/>
 

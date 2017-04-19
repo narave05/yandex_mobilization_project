@@ -29,7 +29,8 @@ class HistoryListPresenter extends BaseRepositoryPresenter<HistoryListContract.I
 
     @Override
     public void handleFavoriteStatusChanged(TranslationDTO translationDTO) {
-        getRepository().updateTranslationFavoriteStatusAsync(translationDTO.getPrimaryKey(), translationDTO.isFavorite());
+        getRepository().updateTranslationFavoriteStatusAsync(translationDTO.getPrimaryKey(),
+                translationDTO.isFavorite());
         EventBus.getDefault().postSticky(translationDTO);
     }
 

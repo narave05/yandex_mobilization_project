@@ -2,6 +2,7 @@ package com.example.narek.project_mobilization_yandex.ui.translate;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
@@ -51,9 +52,14 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
 
     @Override
     public void handleTextInput(String text) {
+        Log.e("text: ", "-" + text +"-");
+        Log.e("mLastInputText: ", "-" + mLastInputText +"-");
         if (text.isEmpty()) {
             clearInputData();
         } else {
+            if (text.equals(mLastInputText)) {
+                return;
+            }
             mLastInputText = text;
             getTranslationData();
         }
@@ -74,8 +80,8 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
             case R.id.switch_icon:
                 mLanguagePair.swap();
                 mLastInputText = mLastTranslatedText;
-                callUpdateToolbarLanguages();
                 getView().updateInputTranslationText(mLastInputText);
+                callUpdateToolbarLanguages();
                 break;
             case R.id.first_lang_id:
                 getView().startLanguageListActivity(FIRST_LANGUAGE_LIST, mLanguagePair.getFirstLanguage().getCode());
@@ -90,6 +96,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     public void handleFavoriteClick() {
         if (mLastTranslationDTO != null) {
             mLastTranslationDTO.setFavorite(!mLastTranslationDTO.isFavorite());
+            getRepository().updateTranslationFavoriteStatusAsync(mLastTranslationDTO.getPrimaryKey(), mLastTranslationDTO.isFavorite());
             EventBus.getDefault().postSticky(mLastTranslationDTO);
         }
     }

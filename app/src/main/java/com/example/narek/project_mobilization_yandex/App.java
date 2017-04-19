@@ -30,10 +30,4 @@ public class App extends Application{
                 .build();
         Realm.setDefaultConfiguration(config);
     }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        Log.e("onLowMemory: ", "SSSSSSSSSS ");
-    }
 }

@@ -13,16 +13,18 @@ import static com.example.narek.project_mobilization_yandex.util.constant.Consta
 
 public class YandexDictionaryApi {
 
-    private DictionaryRestService mRestService = RestServiceGenerator.createService(DictionaryRestService.class, AppConfig.DICTIONARY_API_URL);
+    private DictionaryRestService mRestService = RestServiceGenerator.createService(DictionaryRestService.class,
+            AppConfig.DICTIONARY_API_URL);
 
     public Call<DictionaryResponse> lookupDictionaryResult(String text, String languagePairCods) {
-        return mRestService.callLookupDictionaryResult(AppConfig.DICTIONARY_API_KEY, text, languagePairCods, SHORT_POS);
+        return mRestService.callLookupDictionaryResult(AppConfig.DICTIONARY_API_KEY, text, languagePairCods, SHORT_POS, "ru");
     }
 
 
     private interface DictionaryRestService {
-        @GET("lookup")
+        @GET("lookup?")
         Call<DictionaryResponse> callLookupDictionaryResult(@Query("key") String key, @Query("text") String text,
-                                                            @Query("lang") String lang, @Query("flags") int flags);
+                                                            @Query("lang") String lang, @Query("flags") int flags,
+                                                            @Query("ui") String ui);
     }
 }
