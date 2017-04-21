@@ -10,4 +10,6 @@
     <string name="error_connection_text">Ошибка соединения</string>
     <string name="recreate_text">ПОВТОРИТЬ</string>
     <string name="error_hint_text">Проверьте подключение к   Интернету и повторите попытку.</string>
+    <string name="no_internet_connection_text">no internet connection</string>
+    <string name="history_list_null_text">history list is null</string>
 </resources>

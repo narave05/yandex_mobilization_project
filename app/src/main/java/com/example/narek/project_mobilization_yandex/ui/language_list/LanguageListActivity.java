@@ -14,6 +14,7 @@ import android.view.View;
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryActivity;
+import com.example.narek.project_mobilization_yandex.ui.widget.ErrorLayout;
 import com.example.narek.project_mobilization_yandex.ui.widget.LoadingView;
 import com.example.narek.project_mobilization_yandex.util.ViewHelper;
 
@@ -42,6 +43,9 @@ public class LanguageListActivity extends BaseRepositoryActivity<LanguageListCon
 
     @BindView(R.id.loading_view)
     LoadingView mLoadingView;
+
+    @BindView(R.id.error_layout)
+    ErrorLayout mErrorLayout;
 
     private int mLanguageListType;
 
@@ -82,7 +86,7 @@ public class LanguageListActivity extends BaseRepositoryActivity<LanguageListCon
 
     @Override
     public void showError(String error) {
-        ViewHelper.showToast(this, error);
+        mErrorLayout.setVisibility(View.VISIBLE);
     }
 
     @Override

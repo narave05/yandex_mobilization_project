@@ -1,53 +1,52 @@
 package com.example.narek.project_mobilization_yandex.data.repository;
 
-import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.AvailableLanguageEvent;
+import com.example.narek.project_mobilization_yandex.App;
+import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.TranslatedEvent;
 import com.example.narek.project_mobilization_yandex.util.NetworkStatusChecker;
 
 import org.greenrobot.eventbus.EventBus;
 
+import static com.example.narek.project_mobilization_yandex.data.repository.RepositoryService.DELETE_ALL_TRANSLATION_COMMAND;
+import static com.example.narek.project_mobilization_yandex.data.repository.RepositoryService.GET_HISTORY_LIST_COMMAND;
+import static com.example.narek.project_mobilization_yandex.data.repository.RepositoryService.GET_LANGUAGES_FROM_DB_COMMAND;
+import static com.example.narek.project_mobilization_yandex.data.repository.RepositoryService.GET_LANGUAGES_FROM_NETWORK_COMMAND;
+
 public class Repository implements IRepository {
 
+    private final String mErrorText = App.getInstance().getString(R.string.no_internet_connection_text);
+
     @Override
-    public void findTranslationDataAsync(String text, String languagePairCods) {
+    public void findTranslationDataAsync(String text, String languagePairCodes) {
         if (!NetworkStatusChecker.isNetworkAvailable()) {
-            EventBus.getDefault().post(new TranslatedEvent("no internet connection"));
+            EventBus.getDefault().post(new TranslatedEvent(mErrorText));
             return;
         }
-        RepositoryService.startThisService(1, text, languagePairCods);
+        RepositoryService.startFindingTranslationData(text, languagePairCodes);
     }
 
     @Override
     public void updateTranslationFavoriteStatusAsync(String primaryKey, boolean isFavorite) {
-        if (!NetworkStatusChecker.isNetworkAvailable()) {
-            // TODO: 14.04.2017
-           // EventBus.getDefault().post(new TranslatedEvent("no internet connection"));
-            return;
-        }
-        RepositoryService.startThisService(2, primaryKey, isFavorite);
+        RepositoryService.startUpdateFavoriteStatus(primaryKey, isFavorite);
     }
 
     @Override
     public void getAvailableLanguageListAsync() {
-        RepositoryService.startThisService(3);
+        RepositoryService.startThisServiceByCommand(GET_LANGUAGES_FROM_DB_COMMAND);
     }
 
     @Override
     public void getAndSaveAvailableLanguageListAsync() {
-        if (!NetworkStatusChecker.isNetworkAvailable()) {
-            EventBus.getDefault().post(new AvailableLanguageEvent("no internet connection"));
-            return;
-        }
-        RepositoryService.startThisService(5);
+        RepositoryService.startThisServiceByCommand(GET_LANGUAGES_FROM_NETWORK_COMMAND);
     }
 
     @Override
     public void getHistoryListAsync() {
-        RepositoryService.startThisService(4);
+        RepositoryService.startThisServiceByCommand(GET_HISTORY_LIST_COMMAND);
     }
 
     @Override
     public void deleteAllTranslationsAsync() {
-            RepositoryService.startThisService(6);
+            RepositoryService.startThisServiceByCommand(DELETE_ALL_TRANSLATION_COMMAND);
     }
 }

@@ -8,6 +8,8 @@ import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepo
 class SplashPresenter extends BaseRepositoryPresenter<SplashContract.IView>
         implements SplashContract.IPresenter {
 
+    private static final int DELAY_MILLIS = 3000;
+
     @Override
     public void init() {
         getRepository().getAndSaveAvailableLanguageListAsync();
@@ -22,7 +24,7 @@ class SplashPresenter extends BaseRepositoryPresenter<SplashContract.IView>
                     getView().openTargetActivity();
                 }
             }
-        }, 3000);
+        }, DELAY_MILLIS);
     }
 
     @Override

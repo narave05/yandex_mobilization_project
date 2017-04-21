@@ -4,8 +4,10 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.narek.project_mobilization_yandex.App;
+import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.db.DatabaseRepository;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
@@ -20,6 +22,7 @@ import com.example.narek.project_mobilization_yandex.data.model.rest.AvailableLa
 import com.example.narek.project_mobilization_yandex.data.model.rest.DictionaryResponse;
 import com.example.narek.project_mobilization_yandex.data.model.rest.TranslationResponse;
 import com.example.narek.project_mobilization_yandex.data.network.NetworkRepository;
+import com.example.narek.project_mobilization_yandex.util.NetworkStatusChecker;
 import com.google.gson.internal.LinkedTreeMap;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,36 +39,48 @@ import retrofit2.Response;
 
 public class RepositoryService extends IntentService {
 
-    public static final String ACTION = "ActionIntentKey";
-    public static final String TRANSLATION_DTO = "translationDTO";
+    public static final String COMMAND = "command";
     public static final String ORIGINAL_TEXT = "originalText";
-    public static final String LANGUAGE_PAIR_CODS = "languagePairCods";
+    public static final String LANGUAGE_PAIR_CODES = "languagePairCodes";
     public static final String PRIMARY_KEY = "primaryKey";
     public static final String IS_FAVORITE = "isFavorite";
+    public static final int FIND_TRANSLATION_COMMAND = 1;
+    public static final int UPDATE_FAVORITE_STATUS_COMMAND = 2;
+    public static final int GET_LANGUAGES_FROM_DB_COMMAND = 3;
+    public static final int GET_LANGUAGES_FROM_NETWORK_COMMAND = 5;
+    public static final int DELETE_ALL_TRANSLATION_COMMAND = 6;
+    public static final int GET_HISTORY_LIST_COMMAND = 4;
 
-    public static void startThisService(int dbAction) {
+    public static Intent getIntent(int command) {
         Context context = App.getInstance().getApplicationContext();
         Intent intent = new Intent(context, RepositoryService.class);
-        intent.putExtra(ACTION, dbAction);
+        intent.putExtra(COMMAND, command);
+        return intent;
+    }
+
+    public static void startThisService(Intent intent) {
+        Context context = App.getInstance().getApplicationContext();
         context.startService(intent);
     }
 
-    public static void startThisService(int dbAction, String originalText, String languagePairCods) {
-        Context context = App.getInstance().getApplicationContext();
-        Intent intent = new Intent(context, RepositoryService.class);
-        intent.putExtra(ACTION, dbAction);
+    public static void startThisServiceByCommand(int command) {
+        Intent intent = getIntent(command);
+        intent.putExtra(COMMAND, command);
+        startThisService(intent);
+    }
+
+    public static void startFindingTranslationData(String originalText, String languagePairCods) {
+        Intent intent = getIntent(FIND_TRANSLATION_COMMAND);
         intent.putExtra(ORIGINAL_TEXT, originalText);
-        intent.putExtra(LANGUAGE_PAIR_CODS, languagePairCods);
-        context.startService(intent);
+        intent.putExtra(LANGUAGE_PAIR_CODES, languagePairCods);
+        startThisService(intent);
     }
 
-    public static void startThisService(int dbAction, String primaryKey, boolean isFavorite) {
-        Context context = App.getInstance().getApplicationContext();
-        Intent intent = new Intent(context, RepositoryService.class);
-        intent.putExtra(ACTION, dbAction);
+    public static void startUpdateFavoriteStatus(String primaryKey, boolean isFavorite) {
+        Intent intent = getIntent(UPDATE_FAVORITE_STATUS_COMMAND);
         intent.putExtra(PRIMARY_KEY, primaryKey);
         intent.putExtra(IS_FAVORITE, isFavorite);
-        context.startService(intent);
+        startThisService(intent);
     }
 
     public RepositoryService() {
@@ -75,27 +90,28 @@ public class RepositoryService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent != null) {
-            switch (intent.getIntExtra(ACTION, 0)) {
-                case 1:
+            switch (intent.getIntExtra(COMMAND, 0)) {
+
+                case FIND_TRANSLATION_COMMAND:
                     String originalText = intent.getStringExtra(ORIGINAL_TEXT);
-                    String languagePairCods = intent.getStringExtra(LANGUAGE_PAIR_CODS);
+                    String languagePairCods = intent.getStringExtra(LANGUAGE_PAIR_CODES);
                     findTranslationData(originalText, languagePairCods);
                     break;
-                case 2:
+                case UPDATE_FAVORITE_STATUS_COMMAND:
                     String primaryKey = intent.getStringExtra(PRIMARY_KEY);
                     boolean isFavorite = intent.getBooleanExtra(IS_FAVORITE, false);
                     updateTranslationFavoriteStatus(primaryKey, isFavorite);
                     break;
-                case 3:
+                case GET_LANGUAGES_FROM_DB_COMMAND:
                     getAvailableLanguageListFromDb();
                     break;
-                case 4:
+                case GET_HISTORY_LIST_COMMAND:
                     getHistoryList();
                     break;
-                case 5:
+                case GET_LANGUAGES_FROM_NETWORK_COMMAND:
                     getAvailableLanguageListFromNetwork();
                     break;
-                case 6:
+                case DELETE_ALL_TRANSLATION_COMMAND:
                     deleteAllTranslations();
                     break;
                 default:
@@ -108,7 +124,8 @@ public class RepositoryService extends IntentService {
     public void findTranslationData(String originalText, String languagePairCods) {
 
         Realm realm = Realm.getDefaultInstance();
-        TranslationDao translationFromDb = DatabaseRepository.getTranslationByPrimaryKey(realm, originalText + languagePairCods);
+        final String primaryKey = originalText + languagePairCods;
+        TranslationDao translationFromDb = DatabaseRepository.getTranslationByPrimaryKey(realm, primaryKey);
         if (translationFromDb != null) {
 
             TranslationDTO translationDTO = new TranslationDTO(translationFromDb);
@@ -117,7 +134,6 @@ public class RepositoryService extends IntentService {
             if (!realm.isInTransaction()) {
                 realm.beginTransaction();
             }
-            // FIXME: 14.04.2017
             translationFromDb.setCreatedOrUpdatedDate(new Date());
             saveOrUpdateTranslation(realm, translationFromDb);
 
@@ -145,10 +161,13 @@ public class RepositoryService extends IntentService {
                 saveOrUpdateTranslation(translationDao);
 
             } else {
-                // TODO: 13.04.2017 handle error
+                String error = translationResponse.errorBody().string();
+                Log.e("findTranslationError: ", " " + error);
+                EventBus.getDefault().post(new TranslatedEvent(error));
             }
         } catch (IOException error) {
             error.printStackTrace();
+            EventBus.getDefault().post(new TranslatedEvent(error.getMessage()));
         }
     }
 
@@ -161,10 +180,13 @@ public class RepositoryService extends IntentService {
     public void getHistoryList() {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<TranslationDao> allTranslations = DatabaseRepository.getAllTranslations(realm);
-//        if (allTranslations == null) {
-//            realm.close();
-//            return;
-//        }
+        if (allTranslations == null) {
+            String error = getString(R.string.history_list_null_text);
+            EventBus.getDefault().postSticky(new AllTranslationsEvent(error));
+            EventBus.getDefault().postSticky(new FavoriteTranslationsEvent(error));
+            realm.close();
+            return;
+        }
         List<TranslationDTO> historyList = new ArrayList<>();
         List<TranslationDTO> favoriteList = new ArrayList<>();
 
@@ -186,6 +208,10 @@ public class RepositoryService extends IntentService {
 
     public void getAvailableLanguageListFromNetwork() {
 
+        if (!NetworkStatusChecker.isNetworkAvailable()) {
+            handleLanguageListError(getString(R.string.no_internet_connection_text));
+            return;
+        }
         try {
             Response<AvailableLanguagesResponse> languageListResponse = NetworkRepository.getAvailableLanguageList();
             if (languageListResponse.isSuccessful()) {
@@ -203,23 +229,33 @@ public class RepositoryService extends IntentService {
                 getAvailableLanguageListFromDb();
 
             } else {
-                // TODO: 13.04.2017 handle error
+                String error = languageListResponse.errorBody().string();
+                Log.e("getLanguageNetError: ", " " + error);
+                handleLanguageListError(error);
             }
-            // TODO: 13.04.2017 Event Bus
+
         } catch (IOException error) {
             error.printStackTrace();
-            // TODO: 13.04.2017 Event Bus
+            handleLanguageListError(error.getMessage());
         }
+    }
+
+    private void handleLanguageListError(String error) {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<LanguageDao> languageDaoList = DatabaseRepository.getLanguageList(realm);
+        if (languageDaoList == null || languageDaoList.isEmpty())
+            EventBus.getDefault().postSticky(new AvailableLanguageEvent(error));
+        realm.close();
     }
 
     public void getAvailableLanguageListFromDb() {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<LanguageDao> languageDaoList = DatabaseRepository.getLanguageList(realm);
 
-        if (languageDaoList != null && languageDaoList.size() > 0) {
+        if (languageDaoList != null && !languageDaoList.isEmpty()) {
             List<Language> languageList = new ArrayList<>();
             for (LanguageDao languageDao : languageDaoList) {
-                languageList.add(new Language(languageDao.getCode(),languageDao.getFullName()));
+                languageList.add(new Language(languageDao.getCode(), languageDao.getFullName()));
             }
             EventBus.getDefault().post(new AvailableLanguageEvent(languageList));
         }
