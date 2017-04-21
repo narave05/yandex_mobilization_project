@@ -15,7 +15,5 @@ public interface BaseRepositoryContract {
         void showProgress();
 
         void hideProgress();
-
-        void showError(String error);
     }
 }

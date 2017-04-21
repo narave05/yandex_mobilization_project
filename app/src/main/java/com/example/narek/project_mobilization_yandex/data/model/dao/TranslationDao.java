@@ -13,6 +13,9 @@ import io.realm.annotations.PrimaryKey;
 
 public class TranslationDao extends RealmObject {
 
+    public static final String PRIMARY_KEY = "primaryKey";
+    public static final String CREATED_OR_UPDATED_DATE = "createdOrUpdatedDate";
+
     @PrimaryKey
     private String primaryKey;
 

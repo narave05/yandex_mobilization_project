@@ -12,19 +12,16 @@ import retrofit2.http.Query;
 
 public class YandexTranslateApi {
 
+    private static final String UI = "ru";
+
     private TranslateRestService mRestService = RestServiceGenerator.createService(TranslateRestService.class, AppConfig.TRANSLATE_API_URL);
 
     public Call<TranslationResponse> translationToSelectedLanguage(String text, String lang) {
         return mRestService.callTranslationToSelectedLanguage(AppConfig.TRANSLATE_API_KEY, text, lang);
     }
 
-    // TODO: 25.03.2017 set default lang
     public Call<AvailableLanguagesResponse> getAvailableLanguages() {
-        return mRestService.callAvailableLanguagesList(AppConfig.TRANSLATE_API_KEY, "ru");
-    }
-
-    public Call<Object> detectLanguageByText(String text) {
-        return mRestService.callDetectLanguageByText(AppConfig.TRANSLATE_API_KEY, text);
+        return mRestService.callAvailableLanguagesList(AppConfig.TRANSLATE_API_KEY, UI);
     }
 
     private interface TranslateRestService {
@@ -35,9 +32,6 @@ public class YandexTranslateApi {
 
         @GET("getLangs")
         Call<AvailableLanguagesResponse> callAvailableLanguagesList(@Query("key") String key, @Query("ui") String ui);
-
-        @GET("detect")
-        Call<Object> callDetectLanguageByText(@Query("key") String key, @Query("text") String text);
 
     }
 }

@@ -78,6 +78,7 @@ class LanguageListPresenter extends BaseRepositoryPresenter<LanguageListContract
     }
 
     private void showError(String error) {
+        int i = 0;
         if (isViewAttached()) {
             getView().hideProgress();
             getView().showError(error);

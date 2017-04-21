@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.narek.project_mobilization_yandex.App;
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.db.DatabaseRepository;
+import com.example.narek.project_mobilization_yandex.data.db.IDatabaseRepository;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
 import com.example.narek.project_mobilization_yandex.data.model.dao.LanguageDao;
@@ -21,6 +22,7 @@ import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.Tr
 import com.example.narek.project_mobilization_yandex.data.model.rest.AvailableLanguagesResponse;
 import com.example.narek.project_mobilization_yandex.data.model.rest.DictionaryResponse;
 import com.example.narek.project_mobilization_yandex.data.model.rest.TranslationResponse;
+import com.example.narek.project_mobilization_yandex.data.network.INetworkRepository;
 import com.example.narek.project_mobilization_yandex.data.network.NetworkRepository;
 import com.example.narek.project_mobilization_yandex.util.NetworkStatusChecker;
 import com.google.gson.internal.LinkedTreeMap;
@@ -50,6 +52,9 @@ public class RepositoryService extends IntentService {
     public static final int GET_LANGUAGES_FROM_NETWORK_COMMAND = 5;
     public static final int DELETE_ALL_TRANSLATION_COMMAND = 6;
     public static final int GET_HISTORY_LIST_COMMAND = 4;
+
+    IDatabaseRepository mDatabaseRepository = new DatabaseRepository();
+    INetworkRepository mNetworkRepository = new NetworkRepository();
 
     public static Intent getIntent(int command) {
         Context context = App.getInstance().getApplicationContext();
@@ -125,7 +130,7 @@ public class RepositoryService extends IntentService {
 
         Realm realm = Realm.getDefaultInstance();
         final String primaryKey = originalText + languagePairCods;
-        TranslationDao translationFromDb = DatabaseRepository.getTranslationByPrimaryKey(realm, primaryKey);
+        TranslationDao translationFromDb = mDatabaseRepository.getTranslationByPrimaryKey(realm, primaryKey);
         if (translationFromDb != null) {
 
             TranslationDTO translationDTO = new TranslationDTO(translationFromDb);
@@ -142,12 +147,12 @@ public class RepositoryService extends IntentService {
         realm.close();
 
         try {
-            Response<TranslationResponse> translationResponse = NetworkRepository.findTranslationText(originalText, languagePairCods);
+            Response<TranslationResponse> translationResponse = mNetworkRepository.findTranslationText(originalText, languagePairCods);
             if (translationResponse.isSuccessful()) {
 
                 List<String> translationTextList = translationResponse.body().getTextList();
 
-                Response<DictionaryResponse> dictionaryDataResponse = NetworkRepository.findDictionaryData(originalText, languagePairCods);
+                Response<DictionaryResponse> dictionaryDataResponse = mNetworkRepository.findDictionaryData(originalText, languagePairCods);
 
                 TranslationDTO translationDTO = new TranslationDTO(originalText, languagePairCods, translationTextList, null);
                 if (dictionaryDataResponse.isSuccessful()) {
@@ -173,13 +178,13 @@ public class RepositoryService extends IntentService {
 
     public void updateTranslationFavoriteStatus(String primaryKey, boolean isFavorite) {
         Realm realm = Realm.getDefaultInstance();
-        DatabaseRepository.updateFavoriteStatus(realm, primaryKey, isFavorite);
+        mDatabaseRepository.updateFavoriteStatus(realm, primaryKey, isFavorite);
         realm.close();
     }
 
     public void getHistoryList() {
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<TranslationDao> allTranslations = DatabaseRepository.getAllTranslations(realm);
+        RealmResults<TranslationDao> allTranslations = mDatabaseRepository.getAllTranslations(realm);
         if (allTranslations == null) {
             String error = getString(R.string.history_list_null_text);
             EventBus.getDefault().postSticky(new AllTranslationsEvent(error));
@@ -213,7 +218,7 @@ public class RepositoryService extends IntentService {
             return;
         }
         try {
-            Response<AvailableLanguagesResponse> languageListResponse = NetworkRepository.getAvailableLanguageList();
+            Response<AvailableLanguagesResponse> languageListResponse = mNetworkRepository.getAvailableLanguageList();
             if (languageListResponse.isSuccessful()) {
 
                 AvailableLanguagesResponse languagesResponse = languageListResponse.body();
@@ -242,15 +247,21 @@ public class RepositoryService extends IntentService {
 
     private void handleLanguageListError(String error) {
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<LanguageDao> languageDaoList = DatabaseRepository.getLanguageList(realm);
-        if (languageDaoList == null || languageDaoList.isEmpty())
+        try {
+            RealmResults<LanguageDao> languageDaoList = mDatabaseRepository.getLanguageList(realm);
+            if (languageDaoList == null || languageDaoList.isEmpty())
+                EventBus.getDefault().postSticky(new AvailableLanguageEvent(error));
+
+        } catch (Exception e) {
+            e.printStackTrace();
             EventBus.getDefault().postSticky(new AvailableLanguageEvent(error));
-        realm.close();
+            realm.close();
+        }
     }
 
     public void getAvailableLanguageListFromDb() {
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<LanguageDao> languageDaoList = DatabaseRepository.getLanguageList(realm);
+        RealmResults<LanguageDao> languageDaoList = mDatabaseRepository.getLanguageList(realm);
 
         if (languageDaoList != null && !languageDaoList.isEmpty()) {
             List<Language> languageList = new ArrayList<>();
@@ -264,24 +275,24 @@ public class RepositoryService extends IntentService {
 
     public void saveAvailableLanguageList(List<LanguageDao> languageDaoList) {
         Realm realm = Realm.getDefaultInstance();
-        DatabaseRepository.saveLanguageList(realm, languageDaoList);
+        mDatabaseRepository.saveLanguageList(realm, languageDaoList);
         realm.close();
     }
 
     private void saveOrUpdateTranslation(TranslationDao translationDao) {
         Realm realm = Realm.getDefaultInstance();
-        DatabaseRepository.saveTranslation(realm, translationDao);
+        mDatabaseRepository.saveTranslation(realm, translationDao);
         realm.close();
     }
 
     private void saveOrUpdateTranslation(Realm realm, TranslationDao translationDao) {
-        DatabaseRepository.saveTranslation(realm, translationDao);
+        mDatabaseRepository.saveTranslation(realm, translationDao);
         realm.close();
     }
 
     private void deleteAllTranslations() {
         Realm realm = Realm.getDefaultInstance();
-        DatabaseRepository.deleteAllTranslations(realm);
+        mDatabaseRepository.deleteAllTranslations(realm);
         realm.close();
     }
 }

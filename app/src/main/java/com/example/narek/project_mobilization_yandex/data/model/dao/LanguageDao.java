@@ -5,6 +5,8 @@ import io.realm.annotations.PrimaryKey;
 
 public class LanguageDao extends RealmObject {
 
+    public static final String FULL_NAME = "fullName";
+
     @PrimaryKey
     private String code;
 

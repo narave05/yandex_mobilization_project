@@ -15,9 +15,10 @@ import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-public class DatabaseRepository {
+public class DatabaseRepository implements IDatabaseRepository{
 
-    public static void saveTranslation(Realm realm, final TranslationDao translationDao) {
+    @Override
+    public void saveTranslation(Realm realm, final TranslationDao translationDao) {
 
         if (!realm.isInTransaction()) {
             realm.beginTransaction();
@@ -27,7 +28,8 @@ public class DatabaseRepository {
 
     }
 
-    public static void saveLanguageList(Realm realm, final List<LanguageDao> languageDaoList) {
+    @Override
+    public void saveLanguageList(Realm realm, final List<LanguageDao> languageDaoList) {
 
         if (!realm.isInTransaction()) {
             realm.beginTransaction();
@@ -39,7 +41,8 @@ public class DatabaseRepository {
 
     }
 
-    public static void updateFavoriteStatus(Realm realm, final String primaryKey, final boolean isFavorite) {
+    @Override
+    public void updateFavoriteStatus(Realm realm, final String primaryKey, final boolean isFavorite) {
 
         if (!realm.isInTransaction()) {
             realm.beginTransaction();
@@ -51,7 +54,8 @@ public class DatabaseRepository {
         realm.commitTransaction();
     }
 
-    public static void deleteAllTranslations(Realm realm) {
+    @Override
+    public void deleteAllTranslations(Realm realm) {
         deleteRealmResult(realm, TranslationDao.class);
         deleteRealmResult(realm, TranslationItemDao.class);
         deleteRealmResult(realm, DictionaryDao.class);
@@ -60,7 +64,7 @@ public class DatabaseRepository {
         deleteRealmResult(realm, ExampleDao.class);
     }
 
-    private static <T extends RealmObject> void deleteRealmResult(Realm realm, Class<T> clazz) {
+    private <T extends RealmObject> void deleteRealmResult(Realm realm, Class<T> clazz) {
         if (!realm.isInTransaction()) {
             realm.beginTransaction();
         }
@@ -69,24 +73,26 @@ public class DatabaseRepository {
         realm.commitTransaction();
     }
 
-    public static TranslationDao getTranslationByPrimaryKey(Realm realm, String primaryKey) {
-        // TODO: 19.04.2017
+    @Override
+    public TranslationDao getTranslationByPrimaryKey(Realm realm, String primaryKey) {
         return realm.where(TranslationDao.class)
-                .equalTo("primaryKey", primaryKey)
+                .equalTo(TranslationDao.PRIMARY_KEY, primaryKey)
                 .findFirst();
     }
 
-    public static RealmResults<TranslationDao> getAllTranslations(Realm realm) {
+    @Override
+    public RealmResults<TranslationDao> getAllTranslations(Realm realm) {
 
         return realm.where(TranslationDao.class)
-                .findAllSorted("createdOrUpdatedDate", Sort.DESCENDING);
+                .findAllSorted(TranslationDao.CREATED_OR_UPDATED_DATE, Sort.DESCENDING);
 
     }
 
-    public static RealmResults<LanguageDao> getLanguageList(Realm realm) {
+    @Override
+    public RealmResults<LanguageDao> getLanguageList(Realm realm) {
 
         return realm.where(LanguageDao.class)
-                .findAllSorted("fullName");
+                .findAllSorted(LanguageDao.FULL_NAME);
 
     }
 }
