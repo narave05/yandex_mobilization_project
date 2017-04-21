@@ -4,12 +4,14 @@ public interface IRepository {
 
     void findTranslationDataAsync(String text, String languagePairCods);
 
-    // void saveTranslationDataAsync(TranslationDTO translationDTO);
-
     void updateTranslationFavoriteStatusAsync(String primaryKey, final boolean isFavorite);
 
     void getAvailableLanguageListAsync();
 
+    void getAndSaveAvailableLanguageListAsync();
+
     void getHistoryListAsync();
+
+    void deleteAllTranslationsAsync();
 
 }

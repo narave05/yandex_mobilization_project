@@ -54,7 +54,7 @@ public class RootActivity extends BaseActivity<RootContract.IView, RootContract.
     private void setupViewPager(NonSwappableViewPager viewPager) {
         RootViewPagerAdapter adapter = new RootViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setPagingEnabled(false);
     }
 }

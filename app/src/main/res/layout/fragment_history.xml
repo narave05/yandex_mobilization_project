@@ -1,25 +1,44 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/history_tab"
-        style="@style/MyTabLayout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/colorPrimary"
-        app:tabIndicatorHeight="3dp"
-        app:tabIndicatorColor="@color/history_fav_tab_indicator_color"
-        app:tabTextColor="@color/history_fav_tab_inactive_text_color"
-        app:tabSelectedTextColor="@color/history_fav_tab_text_color"
-        app:tabGravity="center"
-        app:tabMode="fixed"/>
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/history_tab"
+            style="@style/MyTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/colorPrimary"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@color/history_fav_tab_indicator_color"
+            app:tabIndicatorHeight="3dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/history_fav_tab_text_color"
+            app:tabTextColor="@color/history_fav_tab_inactive_text_color"/>
+
+        <ImageView
+            android:id="@+id/delete_icon"
+            android:layout_width="?actionBarSize"
+            android:layout_height="?actionBarSize"
+            android:layout_gravity="end"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:padding="16dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/delete"/>
+
+    </FrameLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize"
-        />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="?actionBarSize"/>
 </RelativeLayout>

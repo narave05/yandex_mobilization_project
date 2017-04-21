@@ -4,35 +4,14 @@ import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationD
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.AllTranslationsEvent;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.TranslatedEvent;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryPresenter;
+import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.base_history_favorite.HistoryAndFavoriteBasePresenter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-class HistoryListPresenter extends BaseRepositoryPresenter<HistoryListContract.IView>
+class HistoryListPresenter extends HistoryAndFavoriteBasePresenter<HistoryListContract.IView>
         implements HistoryListContract.IPresenter {
-
-    @Override
-    public void init() {
-        findHistory();
-    }
-
-    @Override
-    public void onStart() {
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void handleFavoriteStatusChanged(TranslationDTO translationDTO) {
-        getRepository().updateTranslationFavoriteStatusAsync(translationDTO.getPrimaryKey(),
-                translationDTO.isFavorite());
-        EventBus.getDefault().postSticky(translationDTO);
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLoadHistoryListEvent(AllTranslationsEvent event) {
@@ -54,6 +33,7 @@ class HistoryListPresenter extends BaseRepositoryPresenter<HistoryListContract.I
     public void onLoadTranslationEvent(TranslatedEvent event) {
         if (event.getError() == null) {
             if (isViewAttached()) {
+                getView().hideProgress();
                 getView().insertedOrAddHistoryList(event.getTranslationDTO());
             }
         }
@@ -64,12 +44,5 @@ class HistoryListPresenter extends BaseRepositoryPresenter<HistoryListContract.I
         if (isViewAttached()) {
             getView().updateHistoryList(event);
         }
-    }
-
-    private void findHistory() {
-        if (isViewAttached()) {
-            getView().showProgress();
-        }
-        getRepository().getHistoryListAsync();
     }
 }

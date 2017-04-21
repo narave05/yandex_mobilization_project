@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_connection_text"
+        android:textColor="@color/color4"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="@string/error_hint_text"
+        android:textColor="@color/color4"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/button_recreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/color5"
+        android:clickable="true"
+        android:foreground="?selectableItemBackground"
+        android:padding="8dp"
+        android:text="@string/recreate_text"
+        />
+
+</LinearLayout>

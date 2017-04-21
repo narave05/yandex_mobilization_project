@@ -1,4 +1,4 @@
-package com.example.narek.project_mobilization_yandex.ui.history_and_favorite;
+package com.example.narek.project_mobilization_yandex.ui.history_and_favorite.history_favorite_root;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,5 +31,7 @@ public class HistoryAndFavoritePagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return mTitles[position];
     }
+
+
 
 }

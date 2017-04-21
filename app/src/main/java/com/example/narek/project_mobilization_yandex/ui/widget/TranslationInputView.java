@@ -65,18 +65,17 @@ public class TranslationInputView extends RelativeLayout implements TextWatcher 
         String string = s.toString().trim();
         if (!string.isEmpty()) {
             mImageView.setVisibility(VISIBLE);
-
-            if (isSetTranslation) {
-                if (mTextChangListener != null) {
-                    mTextChangListener.onTextChanged(string);
-                }
-                isSetTranslation = false;
-            } else {
-                scheduleTextChang(string);
-            }
-
         } else {
             mImageView.setVisibility(GONE);
+        }
+
+        if (isSetTranslation) {
+            if (mTextChangListener != null) {
+                mTextChangListener.onTextChanged(string);
+            }
+            isSetTranslation = false;
+        } else {
+            scheduleTextChang(string);
         }
 
     }

@@ -1,6 +1,5 @@
 package com.example.narek.project_mobilization_yandex.ui.base_repository;
 
-
 import com.example.narek.project_mobilization_yandex.ui.base.BaseContract;
 
 public interface BaseRepositoryContract {

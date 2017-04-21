@@ -12,8 +12,9 @@ import com.example.narek.project_mobilization_yandex.R;
 
 public class IconicTabLayout extends TabLayout implements TabLayout.OnTabSelectedListener {
 
-    int icons[] = {R.drawable.ic_tab_translate, R.drawable.ic_tab_fav, R.drawable.ic_tab_settings};
+    int icons[] = {R.drawable.ic_tab_translate, R.drawable.ic_tab_fav};
     private int selectedIconColor = Color.BLACK;
+    // TODO: 20.04.2017
     private int unSelectedIconColor = Color.parseColor("#cbcbcb");
 
     public IconicTabLayout(Context context) {

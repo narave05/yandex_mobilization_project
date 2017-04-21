@@ -7,4 +7,7 @@
     <string name="language_list_tollbar_first_text">Язык текста</string>
     <string name="language_list_tollbar_second_text">Язык перевода</string>
     <string name="search_hint_text">Найти в истории</string>
+    <string name="error_connection_text">Ошибка соединения</string>
+    <string name="recreate_text">ПОВТОРИТЬ</string>
+    <string name="error_hint_text">Проверьте подключение к   Интернету и повторите попытку.</string>
 </resources>

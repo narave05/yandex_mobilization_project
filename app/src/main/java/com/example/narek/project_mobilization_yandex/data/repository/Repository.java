@@ -29,15 +29,25 @@ public class Repository implements IRepository {
 
     @Override
     public void getAvailableLanguageListAsync() {
+        RepositoryService.startThisService(3);
+    }
+
+    @Override
+    public void getAndSaveAvailableLanguageListAsync() {
         if (!NetworkStatusChecker.isNetworkAvailable()) {
             EventBus.getDefault().post(new AvailableLanguageEvent("no internet connection"));
             return;
         }
-        RepositoryService.startThisService(3);
+        RepositoryService.startThisService(5);
     }
 
     @Override
     public void getHistoryListAsync() {
         RepositoryService.startThisService(4);
+    }
+
+    @Override
+    public void deleteAllTranslationsAsync() {
+            RepositoryService.startThisService(6);
     }
 }

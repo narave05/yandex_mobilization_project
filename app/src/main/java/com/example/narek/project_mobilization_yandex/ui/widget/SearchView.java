@@ -6,6 +6,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ public class SearchView extends FrameLayout implements TextWatcher {
     private EditText mSearchInput;
     private AppCompatImageView mCloseIcon;
     private View mBottomLine;
+    private OnQueryTextListener mOnQueryChangeListener;
 
     public SearchView(Context context) {
         super(context);
@@ -33,12 +35,12 @@ public class SearchView extends FrameLayout implements TextWatcher {
 
     private void init() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        AppCompatImageView searchIcon = (AppCompatImageView) inflater.inflate(R.layout.search_icon_layout, this, false);
+        AppCompatImageView searchIcon = (AppCompatImageView) inflater.inflate(R.layout.search_icon_view, this, false);
         addView(searchIcon);
-        mSearchInput = (EditText) inflater.inflate(R.layout.search_input_layout, this, false);
+        mSearchInput = (EditText) inflater.inflate(R.layout.search_input_view, this, false);
         mSearchInput.addTextChangedListener(this);
         addView(mSearchInput);
-        mCloseIcon = (AppCompatImageView) inflater.inflate(R.layout.close_icon_layout, this, false);
+        mCloseIcon = (AppCompatImageView) inflater.inflate(R.layout.close_icon_view, this, false);
         addView(mCloseIcon);
         mBottomLine = inflater.inflate(R.layout.search_bottom_line_view, this, false);
         addView(mBottomLine);
@@ -63,6 +65,10 @@ public class SearchView extends FrameLayout implements TextWatcher {
 
     }
 
+    public void setOnQueryChangeListener(OnQueryTextListener onQueryChangeListener) {
+        mOnQueryChangeListener = onQueryChangeListener;
+    }
+
     public void cancelViewFocus() {
         int color = ContextCompat.getColor(getContext(), R.color.language_line_color);
         mBottomLine.setBackgroundColor(color);
@@ -78,6 +84,10 @@ public class SearchView extends FrameLayout implements TextWatcher {
         ViewHelper.showKeyboard(mSearchInput);
     }
 
+    public void resetInputText() {
+        mSearchInput.setText(null);
+    }
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -91,10 +101,18 @@ public class SearchView extends FrameLayout implements TextWatcher {
         } else {
             mCloseIcon.setVisibility(GONE);
         }
+
+        if (mOnQueryChangeListener != null) {
+            mOnQueryChangeListener.onQueryTextChange(s.toString());
+        }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    public interface OnQueryTextListener {
+        void onQueryTextChange(String newText);
     }
 }

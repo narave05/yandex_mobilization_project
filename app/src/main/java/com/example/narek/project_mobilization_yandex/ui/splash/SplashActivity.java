@@ -5,16 +5,18 @@ import android.support.annotation.NonNull;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.ui.base.BaseActivity;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryActivity;
 import com.example.narek.project_mobilization_yandex.ui.main.RootActivity;
 
 
-public class SplashActivity extends BaseActivity<SplashContract.IView, SplashContract.IPresenter>
+public class SplashActivity extends BaseRepositoryActivity<SplashContract.IView, SplashContract.IPresenter>
         implements SplashContract.IView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        presenter.init();
     }
 
     @NonNull
@@ -27,6 +29,16 @@ public class SplashActivity extends BaseActivity<SplashContract.IView, SplashCon
     public void openTargetActivity() {
         RootActivity.startThisActivity(this);
         finish();
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
     }
 
     @Override

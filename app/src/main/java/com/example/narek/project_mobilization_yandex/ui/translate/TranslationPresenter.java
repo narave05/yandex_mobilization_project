@@ -2,12 +2,12 @@ package com.example.narek.project_mobilization_yandex.ui.translate;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
 import com.example.narek.project_mobilization_yandex.data.model.clean.LanguagePair;
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.DeleteAllTranslationsEvent;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.TranslatedEvent;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryPresenter;
 
@@ -52,8 +52,6 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
 
     @Override
     public void handleTextInput(String text) {
-        Log.e("text: ", "-" + text +"-");
-        Log.e("mLastInputText: ", "-" + mLastInputText +"-");
         if (text.isEmpty()) {
             clearInputData();
         } else {
@@ -63,7 +61,6 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
             mLastInputText = text;
             getTranslationData();
         }
-
     }
 
     @Override
@@ -79,8 +76,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
         switch (id) {
             case R.id.switch_icon:
                 mLanguagePair.swap();
-                mLastInputText = mLastTranslatedText;
-                getView().updateInputTranslationText(mLastInputText);
+                getView().updateInputTranslationText(mLastTranslatedText);
                 callUpdateToolbarLanguages();
                 break;
             case R.id.first_lang_id:
@@ -97,8 +93,13 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
         if (mLastTranslationDTO != null) {
             mLastTranslationDTO.setFavorite(!mLastTranslationDTO.isFavorite());
             getRepository().updateTranslationFavoriteStatusAsync(mLastTranslationDTO.getPrimaryKey(), mLastTranslationDTO.isFavorite());
-            EventBus.getDefault().postSticky(mLastTranslationDTO);
+            EventBus.getDefault().post(mLastTranslationDTO);
         }
+    }
+
+    @Override
+    public void handleRepeatClick() {
+        getTranslationData();
     }
 
     @Override
@@ -140,6 +141,14 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDeleteTranslationEvent(DeleteAllTranslationsEvent event) {
+        clearInputData();
+        if (isViewAttached()) {
+            getView().updateInputTranslationText(null);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFavoriteStatusChangedEvent(TranslationDTO event) {
         if (!isViewAttached() || !event.equals(mLastTranslationDTO)) {
             return;
@@ -160,8 +169,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
 
     private void swapTranslatedAndInputText(boolean isSet) {
         if (!isSet) {
-            mLastInputText = mLastTranslatedText;
-            getView().updateInputTranslationText(mLastInputText);
+            getView().updateInputTranslationText(mLastTranslatedText);
         }
     }
 
@@ -194,6 +202,11 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     }
 
     private void showTranslation(TranslationDTO data) {
+
+        if (data == null) {
+            clearInputData();
+        }
+
         if (isViewAttached()) {
             getView().hideProgress();
             getView().showFavoriteIcon(data.isFavorite());

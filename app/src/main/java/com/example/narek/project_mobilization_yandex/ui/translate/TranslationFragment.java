@@ -14,12 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryFragment;
 import com.example.narek.project_mobilization_yandex.ui.language_list.LanguageListActivity;
 import com.example.narek.project_mobilization_yandex.ui.widget.DictionaryView;
+import com.example.narek.project_mobilization_yandex.ui.widget.ErrorLayout;
 import com.example.narek.project_mobilization_yandex.ui.widget.LoadingView;
 import com.example.narek.project_mobilization_yandex.ui.widget.TranslationInputView;
 import com.example.narek.project_mobilization_yandex.util.ViewHelper;
@@ -37,7 +39,8 @@ import static com.example.narek.project_mobilization_yandex.util.constant.Consta
 public class TranslationFragment extends BaseRepositoryFragment<TranslationContract.IView, TranslationContract.IPresenter>
         implements TranslationContract.IView,
         TranslationInputView.TextChangListener,
-        TranslationInputView.OnCancelClick {
+        TranslationInputView.OnCancelClick,
+        ErrorLayout.OnClickRepeat {
 
     public static final int REQUEST_CODE = 152;
 
@@ -64,6 +67,8 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
 
     @BindView(R.id.fav_icon)
     AppCompatImageView favoriteIcon;
+
+    ErrorLayout mErrorLayout;
 
     Unregistrar mUnregistrar;
 
@@ -140,9 +145,12 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
 
     @Override
     public void showError(String error) {
-        if (getActivity() != null) {
-            ViewHelper.showToast(getActivity(), error);
+        if (mErrorLayout == null) {
+            mErrorLayout = new ErrorLayout(getActivity());
+            mErrorLayout.setOnClickRepeat(this);
         }
+        mRootScrollView.removeAllViews();
+        mRootScrollView.addView(mErrorLayout);
     }
 
     @Override
@@ -220,5 +228,10 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
                 }
             }
         });
+    }
+
+    @Override
+    public void onClickRepeat() {
+       presenter.handleRepeatClick();
     }
 }

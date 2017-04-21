@@ -1,23 +1,37 @@
 package com.example.narek.project_mobilization_yandex.ui.splash;
 
-import android.util.Log;
+import android.os.Handler;
 
-import com.example.narek.project_mobilization_yandex.ui.base.BasePresenter;
+import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryPresenter;
 
 
-class SplashPresenter extends BasePresenter<SplashContract.IView>
+class SplashPresenter extends BaseRepositoryPresenter<SplashContract.IView>
         implements SplashContract.IPresenter {
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        initPresenter();
+    public void init() {
+        getRepository().getAndSaveAvailableLanguageListAsync();
+        openTargetActivityPostDelayed();
+    }
+
+    private void openTargetActivityPostDelayed() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isViewAttached()) {
+                    getView().openTargetActivity();
+                }
+            }
+        }, 3000);
     }
 
     @Override
-    public void initPresenter() {
-        if (isViewAttached()) {
-            getView().openTargetActivity();
-        }
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onStop() {
+
     }
 }

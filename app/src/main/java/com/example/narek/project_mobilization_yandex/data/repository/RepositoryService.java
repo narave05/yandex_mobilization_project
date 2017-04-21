@@ -9,6 +9,7 @@ import com.example.narek.project_mobilization_yandex.App;
 import com.example.narek.project_mobilization_yandex.data.db.DatabaseRepository;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
+import com.example.narek.project_mobilization_yandex.data.model.dao.LanguageDao;
 import com.example.narek.project_mobilization_yandex.data.model.dao.TranslationDao;
 import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.AllTranslationsEvent;
@@ -25,8 +26,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -88,16 +87,23 @@ public class RepositoryService extends IntentService {
                     updateTranslationFavoriteStatus(primaryKey, isFavorite);
                     break;
                 case 3:
-                    getAvailableLanguageList();
+                    getAvailableLanguageListFromDb();
                     break;
                 case 4:
                     getHistoryList();
+                    break;
+                case 5:
+                    getAvailableLanguageListFromNetwork();
+                    break;
+                case 6:
+                    deleteAllTranslations();
                     break;
                 default:
                     break;
             }
         }
     }
+
 
     public void findTranslationData(String originalText, String languagePairCods) {
 
@@ -133,7 +139,7 @@ public class RepositoryService extends IntentService {
                     translationDTO.setDictionary(dictionary);
                 }
 
-                EventBus.getDefault().postSticky(new TranslatedEvent(translationDTO));
+                EventBus.getDefault().post(new TranslatedEvent(translationDTO));
 
                 TranslationDao translationDao = new TranslationDao(translationDTO);
                 saveOrUpdateTranslation(translationDao);
@@ -155,10 +161,10 @@ public class RepositoryService extends IntentService {
     public void getHistoryList() {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<TranslationDao> allTranslations = DatabaseRepository.getAllTranslations(realm);
-        if (allTranslations == null) {
-            realm.close();
-            return;
-        }
+//        if (allTranslations == null) {
+//            realm.close();
+//            return;
+//        }
         List<TranslationDTO> historyList = new ArrayList<>();
         List<TranslationDTO> favoriteList = new ArrayList<>();
 
@@ -178,7 +184,7 @@ public class RepositoryService extends IntentService {
         realm.close();
     }
 
-    public void getAvailableLanguageList() {
+    public void getAvailableLanguageListFromNetwork() {
 
         try {
             Response<AvailableLanguagesResponse> languageListResponse = NetworkRepository.getAvailableLanguageList();
@@ -187,19 +193,14 @@ public class RepositoryService extends IntentService {
                 AvailableLanguagesResponse languagesResponse = languageListResponse.body();
                 LinkedTreeMap<String, String> languages = languagesResponse.getLanguages();
 
-                List<Language> languageList = new ArrayList<>();
+                List<LanguageDao> languageList = new ArrayList<>();
 
                 Set<String> langKeys = languages.keySet();
                 for (String langKey : langKeys) {
-                    languageList.add(new Language(langKey, languages.get(langKey)));
+                    languageList.add(new LanguageDao(langKey, languages.get(langKey)));
                 }
-                Collections.sort(languageList, new Comparator<Language>() {
-                    @Override
-                    public int compare(Language first, Language second) {
-                        return first.getFullName().compareTo(second.getFullName());
-                    }
-                });
-                EventBus.getDefault().post(new AvailableLanguageEvent(languageList));
+                saveAvailableLanguageList(languageList);
+                getAvailableLanguageListFromDb();
 
             } else {
                 // TODO: 13.04.2017 handle error
@@ -211,6 +212,26 @@ public class RepositoryService extends IntentService {
         }
     }
 
+    public void getAvailableLanguageListFromDb() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<LanguageDao> languageDaoList = DatabaseRepository.getLanguageList(realm);
+
+        if (languageDaoList != null && languageDaoList.size() > 0) {
+            List<Language> languageList = new ArrayList<>();
+            for (LanguageDao languageDao : languageDaoList) {
+                languageList.add(new Language(languageDao.getCode(),languageDao.getFullName()));
+            }
+            EventBus.getDefault().post(new AvailableLanguageEvent(languageList));
+        }
+        realm.close();
+    }
+
+    public void saveAvailableLanguageList(List<LanguageDao> languageDaoList) {
+        Realm realm = Realm.getDefaultInstance();
+        DatabaseRepository.saveLanguageList(realm, languageDaoList);
+        realm.close();
+    }
+
     private void saveOrUpdateTranslation(TranslationDao translationDao) {
         Realm realm = Realm.getDefaultInstance();
         DatabaseRepository.saveTranslation(realm, translationDao);
@@ -219,6 +240,12 @@ public class RepositoryService extends IntentService {
 
     private void saveOrUpdateTranslation(Realm realm, TranslationDao translationDao) {
         DatabaseRepository.saveTranslation(realm, translationDao);
+        realm.close();
+    }
+
+    private void deleteAllTranslations() {
+        Realm realm = Realm.getDefaultInstance();
+        DatabaseRepository.deleteAllTranslations(realm);
         realm.close();
     }
 }

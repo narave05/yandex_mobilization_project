@@ -41,6 +41,8 @@ interface TranslationContract {
 
         void handleFavoriteClick();
 
+        void handleRepeatClick();
+
         void handleOnActivityResult(int requestCode, int resultCode, Intent data);
     }
 }

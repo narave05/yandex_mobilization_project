@@ -4,13 +4,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.HistoryAndFavoriteRootFragment;
-import com.example.narek.project_mobilization_yandex.ui.settings.SettingsFragment;
+import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.history_favorite_root.HistoryAndFavoriteRootFragment;
 import com.example.narek.project_mobilization_yandex.ui.translate.TranslationFragment;
 
 public class RootViewPagerAdapter extends FragmentPagerAdapter {
 
-    private final int ITEM_COUNT = 3;
+    private final int ITEM_COUNT = 2;
 
     public RootViewPagerAdapter(FragmentManager manager) {
         super(manager);
@@ -24,8 +23,6 @@ public class RootViewPagerAdapter extends FragmentPagerAdapter {
                 return TranslationFragment.newInstance();
             case 1:
                 return HistoryAndFavoriteRootFragment.newInstance();
-            case 2:
-                return SettingsFragment.newInstance();
         }
         return null;
     }
