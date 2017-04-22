@@ -1,5 +1,7 @@
 package com.example.narek.project_mobilization_yandex.ui.history_and_favorite.history_favorite_root;
 
+import android.view.View;
+
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.DeleteAllTranslationsEvent;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryPresenter;
 
@@ -29,6 +31,18 @@ class HistoryAndFavoriteRootPresenter extends BaseRepositoryPresenter<HistoryAnd
     public void handlePageChanged() {
         if (isViewAttached()) {
             getView().hideKeyboard();
+        }
+    }
+
+    @Override
+    public void handleHistoryChange(boolean shouldShowDeleteIcon) {
+        if (!isViewAttached()) {
+            return;
+        }
+        if (shouldShowDeleteIcon) {
+            getView().showDeleteIcon();
+        } else {
+            getView().hideDeleteIcon();
         }
     }
 

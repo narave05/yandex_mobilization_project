@@ -10,9 +10,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public class YandexTranslateApi {
+import static com.example.narek.project_mobilization_yandex.util.constant.Constants.UI;
 
-    private static final String UI = "ru";
+public class YandexTranslateApi {
 
     private TranslateRestService mRestService = RestServiceGenerator.createService(TranslateRestService.class, AppConfig.TRANSLATE_API_URL);
 

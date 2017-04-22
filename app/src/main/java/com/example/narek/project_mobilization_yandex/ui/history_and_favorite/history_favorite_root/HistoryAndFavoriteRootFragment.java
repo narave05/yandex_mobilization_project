@@ -107,7 +107,7 @@ public class HistoryAndFavoriteRootFragment extends BaseRepositoryFragment<Histo
 
     @Override
     public void deleteHistoryAndFavoriteLists() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < mAdapter.getCount(); i++) {
             if (mAdapter.getItem(i) instanceof DeleteClickCallback) {
                 DeleteClickCallback deleteClickCallback = (DeleteClickCallback) mAdapter.getItem(i);
                 deleteClickCallback.onDeleteClick();
@@ -121,11 +121,17 @@ public class HistoryAndFavoriteRootFragment extends BaseRepositoryFragment<Histo
     }
 
     @Override
+    public void showDeleteIcon() {
+        mDeleteIcon.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideDeleteIcon() {
+        mDeleteIcon.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onHistoryChange(boolean shouldShowDeleteIcon) {
-        if (shouldShowDeleteIcon) {
-            mDeleteIcon.setVisibility(View.VISIBLE);
-        } else {
-            mDeleteIcon.setVisibility(View.GONE);
-        }
+        presenter.handleHistoryChange(shouldShowDeleteIcon);
     }
 }

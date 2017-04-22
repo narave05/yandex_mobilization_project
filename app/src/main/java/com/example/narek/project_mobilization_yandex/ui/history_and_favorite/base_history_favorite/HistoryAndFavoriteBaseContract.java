@@ -11,6 +11,8 @@ public interface HistoryAndFavoriteBaseContract {
 
         void handleDeleteClick();
 
+        void handleListStateChange(boolean isEmpty, boolean isSearchResult);
+
         void handleSearchText(String newText);
 
         void handleFavoriteStatusChanged(TranslationDTO translationDTO);
@@ -21,6 +23,15 @@ public interface HistoryAndFavoriteBaseContract {
         void deleteHistoryAndFavoriteList();
 
         void filterAdapterList(String text);
+
+        void showHintLayout();
+
+        void showSearchView();
+
+        void hideHintLayout();
+
+        void hideSearchView();
+
     }
 
 }

@@ -103,27 +103,37 @@ public abstract class HistoryAndFavoriteBaseFragment
     }
 
     @Override
+    public void showHintLayout() {
+        mHintLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSearchView() {
+        mSearchView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideHintLayout() {
+        mHintLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideSearchView() {
+        mSearchView.resetInputText();
+        mSearchView.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onDeleteClick() {
         presenter.handleDeleteClick();
     }
 
     @Override
     public void onListStateChange(boolean isEmpty, boolean isSearchResult) {
-
-        if (isEmpty) {
-            if (!isSearchResult) {
-                mSearchView.resetInputText();
-                mSearchView.setVisibility(View.GONE);
-            }
-            mHintLayout.setVisibility(View.VISIBLE);
-        } else {
-            if (!isSearchResult) {
-                mSearchView.setVisibility(View.VISIBLE);
-            }
-            mHintLayout.setVisibility(View.GONE);
-        }
-
+        presenter.handleListStateChange(isEmpty,isSearchResult);
     }
+
+
 
     @Override
     public void onQueryTextChange(String newText) {

@@ -76,6 +76,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
         switch (id) {
             case R.id.switch_icon:
                 mLanguagePair.swap();
+                mLastInputText = null;
                 getView().updateInputTranslationText(mLastTranslatedText);
                 callUpdateToolbarLanguages();
                 break;
@@ -169,6 +170,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
 
     private void swapTranslatedAndInputText(boolean isSet) {
         if (!isSet) {
+            mLastInputText = null;
             getView().updateInputTranslationText(mLastTranslatedText);
         }
     }
