@@ -1,11 +1,16 @@
 package com.example.narek.project_mobilization_yandex.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+
+import com.example.narek.project_mobilization_yandex.R;
 
 import java.lang.reflect.Method;
 
@@ -58,5 +63,25 @@ public class ViewHelper {
         }
         ((ViewGroup.MarginLayoutParams) view.getLayoutParams())
                 .setMargins(margins[0], margins[1], margins[2], margins[3]);
+    }
+
+    public static void createAlertDialog(Activity activity, String dialogMessage,
+                                         final DialogPositiveButtonClickListener listener) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage(dialogMessage);
+        builder.setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                listener.onPositiveButtonClick();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

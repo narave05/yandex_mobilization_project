@@ -3,6 +3,8 @@
     <string name="recreate_text">ПОВТОРИТЬ</string>
     <string name="favorite_text">Избрание</string>
     <string name="history_text">История</string>
+    <string name="history_delete_text">Вы уверены что хотите очистить историю</string>
+    <string name="ok_text">Да</string>
     <!-- Hint strings -->
     <string name="search_hint_text">Найти в истории</string>
     <string name="trnsliationInputHintText">Введите текст</string>
@@ -17,4 +19,5 @@
     <string name="error_text">Ошибка</string>
     <string name="error_connection_hint_text">Проверьте подключение к \n Интернету и повторите попытку.</string>
     <string name="error_hint_text">Что то пошло не так \n повторите попытку.</string>
+    <string name="cancel_text">Отменить</string>
 </resources>

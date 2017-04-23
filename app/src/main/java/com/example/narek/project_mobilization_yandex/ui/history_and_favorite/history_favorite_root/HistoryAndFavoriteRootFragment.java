@@ -15,6 +15,7 @@ import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryFragment;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.DeleteClickCallback;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.HistoryChangeListener;
+import com.example.narek.project_mobilization_yandex.util.DialogPositiveButtonClickListener;
 import com.example.narek.project_mobilization_yandex.util.ViewHelper;
 
 import butterknife.BindView;
@@ -89,7 +90,15 @@ public class HistoryAndFavoriteRootFragment extends BaseRepositoryFragment<Histo
 
     @OnClick(R.id.delete_icon)
     public void onDeleteIconClicked(View view) {
-        presenter.handleDeleteClick();
+        if (getActivity() != null) {
+            ViewHelper.createAlertDialog(getActivity(), getString(R.string.history_delete_text),
+                    new DialogPositiveButtonClickListener() {
+                        @Override
+                        public void onPositiveButtonClick() {
+                            presenter.handleDeleteClick();
+                        }
+                    });
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
