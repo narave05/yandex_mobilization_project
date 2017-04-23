@@ -24,7 +24,6 @@ import com.example.narek.project_mobilization_yandex.data.model.rest.DictionaryR
 import com.example.narek.project_mobilization_yandex.data.model.rest.TranslationResponse;
 import com.example.narek.project_mobilization_yandex.data.network.INetworkRepository;
 import com.example.narek.project_mobilization_yandex.data.network.NetworkRepository;
-import com.example.narek.project_mobilization_yandex.util.NetworkStatusChecker;
 import com.google.gson.internal.LinkedTreeMap;
 
 import org.greenrobot.eventbus.EventBus;
@@ -185,7 +184,7 @@ public class RepositoryService extends IntentService {
     public void getHistoryList() {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<TranslationDao> allTranslations = mDatabaseRepository.getAllTranslations(realm);
-        if (allTranslations == null) {
+        if (allTranslations == null || !allTranslations.isValid() || allTranslations.isEmpty()) {
             String error = getString(R.string.history_list_null_text);
             EventBus.getDefault().postSticky(new AllTranslationsEvent(error));
             EventBus.getDefault().postSticky(new FavoriteTranslationsEvent(error));
@@ -213,10 +212,6 @@ public class RepositoryService extends IntentService {
 
     public void getAvailableLanguageListFromNetwork() {
 
-        if (!NetworkStatusChecker.isNetworkAvailable()) {
-            handleLanguageListError(getString(R.string.no_internet_connection_text));
-            return;
-        }
         try {
             Response<AvailableLanguagesResponse> languageListResponse = mNetworkRepository.getAvailableLanguageList();
             if (languageListResponse.isSuccessful()) {
@@ -236,26 +231,12 @@ public class RepositoryService extends IntentService {
             } else {
                 String error = languageListResponse.errorBody().string();
                 Log.e("getLanguageNetError: ", " " + error);
-                handleLanguageListError(error);
+                EventBus.getDefault().post(new AvailableLanguageEvent(error));
             }
 
         } catch (IOException error) {
             error.printStackTrace();
-            handleLanguageListError(error.getMessage());
-        }
-    }
-
-    private void handleLanguageListError(String error) {
-        Realm realm = Realm.getDefaultInstance();
-        try {
-            RealmResults<LanguageDao> languageDaoList = mDatabaseRepository.getLanguageList(realm);
-            if (languageDaoList == null || languageDaoList.isEmpty())
-                EventBus.getDefault().postSticky(new AvailableLanguageEvent(error));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            EventBus.getDefault().postSticky(new AvailableLanguageEvent(error));
-            realm.close();
+            EventBus.getDefault().post(new AvailableLanguageEvent(error.getMessage()));
         }
     }
 
@@ -263,12 +244,15 @@ public class RepositoryService extends IntentService {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<LanguageDao> languageDaoList = mDatabaseRepository.getLanguageList(realm);
 
-        if (languageDaoList != null && !languageDaoList.isEmpty()) {
+        if (languageDaoList != null && languageDaoList.isValid() && !languageDaoList.isEmpty()) {
             List<Language> languageList = new ArrayList<>();
             for (LanguageDao languageDao : languageDaoList) {
                 languageList.add(new Language(languageDao.getCode(), languageDao.getFullName()));
             }
             EventBus.getDefault().post(new AvailableLanguageEvent(languageList));
+        } else {
+            String error = getString(R.string.language_list_invalid);
+            EventBus.getDefault().post(new AvailableLanguageEvent(error));
         }
         realm.close();
     }

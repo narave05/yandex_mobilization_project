@@ -15,6 +15,9 @@ import com.example.narek.project_mobilization_yandex.R;
 
 public class ErrorLayout extends FrameLayout {
 
+    private TextView mErrorText;
+    private TextView mErrorHint;
+
     OnClickRepeat mOnClickRepeat;
 
     public ErrorLayout(@NonNull Context context) {
@@ -31,6 +34,8 @@ public class ErrorLayout extends FrameLayout {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.error_layout, this, false);
         addView(linearLayout);
+        mErrorText = (TextView) linearLayout.findViewById(R.id.error_text);
+        mErrorHint = (TextView) linearLayout.findViewById(R.id.error_hint);
         TextView buttonRecreate = (TextView) linearLayout.findViewById(R.id.button_recreate);
         buttonRecreate.setOnClickListener(new OnClickListener() {
             @Override
@@ -46,7 +51,12 @@ public class ErrorLayout extends FrameLayout {
         mOnClickRepeat = onClickRepeat;
     }
 
-   public interface OnClickRepeat {
+    public interface OnClickRepeat {
         void onClickRepeat();
+    }
+
+    public void setErrorTextAndHint(String errorText, String errorHint) {
+        mErrorText.setText(errorText);
+        mErrorHint.setText(errorHint);
     }
 }

@@ -122,7 +122,7 @@ public class HistoryAndFavoriteBaseAdapter
             list.add(0, translationDTO);
         }
         if (mListStateListener != null) {
-            mListStateListener.onListStateChange(mTranslationDTOList.isEmpty(), false);
+            mListStateListener.onListStateChange(mTranslationDTOList.isEmpty(), isFiltered);
         }
     }
 
@@ -142,13 +142,15 @@ public class HistoryAndFavoriteBaseAdapter
         }
         mOriginalTranslationDOTList.remove(translationDTO);
         if (mListStateListener != null) {
-            mListStateListener.onListStateChange(mTranslationDTOList.isEmpty(), false);
+            mListStateListener.onListStateChange(mTranslationDTOList.isEmpty(), isFiltered);
         }
     }
 
     public void deleteAllList() {
-        mTranslationDTOList = new ArrayList<>();
-        mOriginalTranslationDOTList = new ArrayList<>();
+        isFiltered = false;
+        ArrayList<TranslationDTO> emptyList = new ArrayList<>();
+        mTranslationDTOList = emptyList;
+        mOriginalTranslationDOTList = emptyList;
         notifyDataSetChanged();
         if (mListStateListener != null) {
             mListStateListener.onListStateChange(true, false);

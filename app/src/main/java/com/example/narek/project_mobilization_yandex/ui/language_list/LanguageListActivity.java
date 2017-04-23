@@ -16,7 +16,6 @@ import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryActivity;
 import com.example.narek.project_mobilization_yandex.ui.widget.ErrorLayout;
 import com.example.narek.project_mobilization_yandex.ui.widget.LoadingView;
-import com.example.narek.project_mobilization_yandex.util.ViewHelper;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ import static com.example.narek.project_mobilization_yandex.util.constant.Consta
 import static com.example.narek.project_mobilization_yandex.util.constant.Constants.SECOND_LANGUAGE_LIST;
 
 public class LanguageListActivity extends BaseRepositoryActivity<LanguageListContract.IView, LanguageListContract.IPresenter>
-        implements LanguageListContract.IView, LanguageListAdapter.OnItemClickListener {
+        implements LanguageListContract.IView, LanguageListAdapter.OnItemClickListener, ErrorLayout.OnClickRepeat {
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, LanguageListActivity.class);
@@ -53,8 +52,7 @@ public class LanguageListActivity extends BaseRepositoryActivity<LanguageListCon
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_language_list);
-
-
+        mErrorLayout.setOnClickRepeat(this);
         Intent intent = getIntent();
         if (intent != null) {
             mLanguageListType = intent.getIntExtra(LANGUAGE_LIST_TYPE_INTENT_KEY, 0);
@@ -114,6 +112,11 @@ public class LanguageListActivity extends BaseRepositoryActivity<LanguageListCon
     }
 
     @Override
+    public void hideErrorLayout() {
+        mErrorLayout.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onItemClickListener(Language language) {
         presenter.handleLanguageSelected(language);
     }
@@ -143,5 +146,10 @@ public class LanguageListActivity extends BaseRepositoryActivity<LanguageListCon
         mRecyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
+    }
+
+    @Override
+    public void onClickRepeat() {
+        presenter.handleRepeatClick();
     }
 }

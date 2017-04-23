@@ -9,6 +9,7 @@ import io.realm.RealmConfiguration;
 
 public class App extends Application{
 
+    private static final String FILENAME = "projectMobilizationYandex.realm";
     private static App instance = new App();
 
     public static App getInstance() {
@@ -25,7 +26,7 @@ public class App extends Application{
     private void initRealm() {
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .name("projectMobilizationYandex.realm")
+                .name(FILENAME)
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);

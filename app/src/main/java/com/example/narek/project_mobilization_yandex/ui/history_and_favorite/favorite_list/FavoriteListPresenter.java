@@ -26,6 +26,7 @@ class FavoriteListPresenter extends HistoryAndFavoriteBasePresenter<FavoriteList
         } else {
             if (isViewAttached()) {
                 getView().hideProgress();
+                getView().showHintLayout();
                 getView().showError(event.getError());
             }
         }

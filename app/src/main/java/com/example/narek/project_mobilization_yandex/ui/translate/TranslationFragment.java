@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
@@ -147,6 +146,8 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
     public void showError(String error) {
         if (mErrorLayout == null) {
             mErrorLayout = new ErrorLayout(getActivity());
+            mErrorLayout.setErrorTextAndHint(getString(R.string.error_connection_text),
+                    getString(R.string.error_connection_hint_text));
             mErrorLayout.setOnClickRepeat(this);
         }
         mRootScrollView.removeAllViews();
@@ -232,6 +233,6 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
 
     @Override
     public void onClickRepeat() {
-       presenter.handleRepeatClick();
+        presenter.handleRepeatClick();
     }
 }

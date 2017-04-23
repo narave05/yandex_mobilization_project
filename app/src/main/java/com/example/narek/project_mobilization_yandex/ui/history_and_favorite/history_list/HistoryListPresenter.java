@@ -23,6 +23,7 @@ class HistoryListPresenter extends HistoryAndFavoriteBasePresenter<HistoryListCo
         } else {
             if (isViewAttached()) {
                 getView().hideProgress();
+                getView().showHintLayout();
                 getView().showError(event.getError());
             }
         }

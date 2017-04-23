@@ -17,6 +17,8 @@ interface LanguageListContract {
         void returnActivityResultCancel();
 
         void finishLanguageListActivity();
+
+        void hideErrorLayout();
     }
 
     interface IPresenter extends BaseRepositoryContract.IPresenter<IView> {
@@ -24,6 +26,8 @@ interface LanguageListContract {
         void init(String checkedLanguageCod);
 
         void startLoadData();
+
+        void handleRepeatClick();
 
         void handleLanguageSelected(Language language);
 

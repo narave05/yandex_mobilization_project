@@ -21,6 +21,7 @@ public class SearchView extends FrameLayout implements TextWatcher {
     private AppCompatImageView mCloseIcon;
     private View mBottomLine;
     private OnQueryTextListener mOnQueryChangeListener;
+    private boolean needHandleTextChanges = true;
 
     public SearchView(Context context) {
         super(context);
@@ -85,7 +86,9 @@ public class SearchView extends FrameLayout implements TextWatcher {
     }
 
     public void resetInputText() {
+        needHandleTextChanges = false;
         mSearchInput.setText(null);
+        needHandleTextChanges = true;
     }
 
     @Override
@@ -102,7 +105,7 @@ public class SearchView extends FrameLayout implements TextWatcher {
             mCloseIcon.setVisibility(GONE);
         }
 
-        if (mOnQueryChangeListener != null) {
+        if (mOnQueryChangeListener != null && needHandleTextChanges) {
             mOnQueryChangeListener.onQueryTextChange(s.toString());
         }
     }

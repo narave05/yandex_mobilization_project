@@ -48,6 +48,15 @@ class LanguageListPresenter extends BaseRepositoryPresenter<LanguageListContract
     }
 
     @Override
+    public void handleRepeatClick() {
+        getRepository().getAndSaveAvailableLanguageListAsync();
+        if (isViewAttached()) {
+            getView().showProgress();
+            getView().hideErrorLayout();
+        }
+    }
+
+    @Override
     public void handleLanguageSelected(Language language) {
         if (isViewAttached()) {
             getView().returnActivityResultOk(language);
@@ -88,6 +97,7 @@ class LanguageListPresenter extends BaseRepositoryPresenter<LanguageListContract
     private void showLanguageList(List<Language> data) {
         if (isViewAttached()) {
             getView().hideProgress();
+            getView().hideErrorLayout();
             int checkedLanguageIndex = getCheckedLanguageIndex(mCheckedLanguageCod, data);
             getView().showLanguageList(data, checkedLanguageIndex);
         }

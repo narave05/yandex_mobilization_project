@@ -1,15 +1,19 @@
 <resources>
     <string name="app_name">Project Mobilization Yandex</string>
-
-    <!-- TODO: Remove or change this placeholder mTranslatedText -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="recreate_text">ПОВТОРИТЬ</string>
+    <!-- Hint strings -->
+    <string name="search_hint_text">Найти в истории</string>
     <string name="trnsliationInputHintText">Введите текст</string>
+    <!-- Toolbar strings -->
     <string name="language_list_tollbar_first_text">Язык текста</string>
     <string name="language_list_tollbar_second_text">Язык перевода</string>
-    <string name="search_hint_text">Найти в истории</string>
-    <string name="error_connection_text">Ошибка соединения</string>
-    <string name="recreate_text">ПОВТОРИТЬ</string>
-    <string name="error_hint_text">Проверьте подключение к   Интернету и повторите попытку.</string>
+    <!-- Error strings -->
     <string name="no_internet_connection_text">no internet connection</string>
     <string name="history_list_null_text">history list is null</string>
+    <string name="language_list_invalid">language list invalid</string>
+    <string name="error_connection_text">Ошибка соединения</string>
+    <string name="error_text">Ошибка</string>
+    <string name="error_connection_hint_text">Проверьте подключение к   Интернету и повторите попытку.</string>
+    <string name="error_hint_text">Что то пошло не так повторите попытку.</string>
+
 </resources>
