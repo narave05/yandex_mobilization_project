@@ -10,7 +10,7 @@
     <color name="gray">#9a9a9a</color>
 
     <color name="light_gray">#cccccc</color>
-    <color name="super_gray">#e5e5e5</color>
+    <color name="light_light_gray">#e5e5e5</color>
 
     <color name="retry_button_color">#e5e5e5</color>
     <color name="language_line_color">#e4e4e4</color>

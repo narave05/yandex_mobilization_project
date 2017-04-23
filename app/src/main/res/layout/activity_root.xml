@@ -27,6 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignTop="@id/bottom_tab"
-        android:background="@color/super_gray"/>
+        android:background="@color/light_light_gray"/>
 
 </RelativeLayout>
