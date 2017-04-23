@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.narek.project_mobilization_yandex.R;
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryFragment;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.DeleteClickCallback;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.ListStateListener;
@@ -87,8 +87,8 @@ public abstract class HistoryAndFavoriteBaseFragment
     }
 
     @Override
-    public void onItemClickListener(TranslationDTO translationDTO) {
-        presenter.handleFavoriteStatusChanged(translationDTO);
+    public void onItemClickListener(TranslationDto translationDto) {
+        presenter.handleFavoriteStatusChanged(translationDto);
     }
 
     @Override
@@ -142,15 +142,15 @@ public abstract class HistoryAndFavoriteBaseFragment
         presenter.handleSearchText(newText);
     }
 
-    protected void setupAdapter(List<TranslationDTO> translationDTOList) {
+    protected void setupAdapter(List<TranslationDto> translationDtoList) {
         if (mAdapter == null) {
             mRecyclerView.setVisibility(View.VISIBLE);
-            mAdapter = new HistoryAndFavoriteBaseAdapter(translationDTOList, this);
+            mAdapter = new HistoryAndFavoriteBaseAdapter(translationDtoList, this);
             mRecyclerView.setAdapter(mAdapter);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
             mRecyclerView.setLayoutManager(layoutManager);
         } else {
-            mAdapter.replaceList(translationDTOList);
+            mAdapter.replaceList(translationDtoList);
         }
     }
 

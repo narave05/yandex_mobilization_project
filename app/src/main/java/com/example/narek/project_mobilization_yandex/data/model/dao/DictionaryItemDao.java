@@ -10,14 +10,13 @@ import io.realm.RealmObject;
 
 public class DictionaryItemDao extends RealmObject {
 
-    // FIXME: 11.04.2017 primary key chkas
     private String mPartOfSpeech;
     private RealmList<TranslationItemDao> mItemList;
 
     public DictionaryItemDao() {
     }
 
-    public DictionaryItemDao(DictionaryItem dictionaryItemDao) {
+    DictionaryItemDao(DictionaryItem dictionaryItemDao) {
         mPartOfSpeech = dictionaryItemDao.getPartOfSpeech();
         mItemList = generateTranslationItems(dictionaryItemDao.getTranslationList());
     }

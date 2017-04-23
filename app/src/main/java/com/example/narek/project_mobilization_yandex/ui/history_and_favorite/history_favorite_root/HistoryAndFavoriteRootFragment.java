@@ -35,8 +35,7 @@ public class HistoryAndFavoriteRootFragment extends BaseRepositoryFragment<Histo
     private HistoryAndFavoritePagerAdapter mAdapter;
 
     public static HistoryAndFavoriteRootFragment newInstance() {
-        HistoryAndFavoriteRootFragment fragment = new HistoryAndFavoriteRootFragment();
-        return fragment;
+        return new HistoryAndFavoriteRootFragment();
     }
 
     @NonNull
@@ -94,7 +93,7 @@ public class HistoryAndFavoriteRootFragment extends BaseRepositoryFragment<Histo
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        mAdapter = new HistoryAndFavoritePagerAdapter(getChildFragmentManager());
+        mAdapter = new HistoryAndFavoritePagerAdapter(getActivity(), getChildFragmentManager());
         viewPager.setAdapter(mAdapter);
         ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
             @Override

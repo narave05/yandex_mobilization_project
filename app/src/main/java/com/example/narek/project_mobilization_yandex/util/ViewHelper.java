@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import java.lang.reflect.Method;
 
@@ -15,10 +14,6 @@ public class ViewHelper {
     private ViewHelper() {
         //no instance
         throw new RuntimeException("Private constructor cannot be accessed");
-    }
-
-    public static void showToast(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     public static void showKeyboard(@NonNull View view) {
@@ -55,7 +50,7 @@ public class ViewHelper {
         setViewMargins(view, margins, true);
     }
 
-    public static void setViewMargins(View view, int[] margins, boolean inDp) {
+    private static void setViewMargins(View view, int[] margins, boolean inDp) {
         if (inDp) {
             for (int i = 0; i < margins.length; i++) {
                 margins[i] = DimenUtils.dpToPx(view.getContext(), margins[i]);

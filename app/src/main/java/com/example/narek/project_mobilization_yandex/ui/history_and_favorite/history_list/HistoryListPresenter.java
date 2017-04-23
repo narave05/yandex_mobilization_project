@@ -1,12 +1,10 @@
 package com.example.narek.project_mobilization_yandex.ui.history_and_favorite.history_list;
 
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.AllTranslationsEvent;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.TranslatedEvent;
-import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryPresenter;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.base_history_favorite.HistoryAndFavoriteBasePresenter;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -18,7 +16,7 @@ class HistoryListPresenter extends HistoryAndFavoriteBasePresenter<HistoryListCo
         if (event.getError() == null) {
             if (isViewAttached()) {
                 getView().hideProgress();
-                getView().showHistoryList(event.getTranslationDTOs());
+                getView().showHistoryList(event.getTranslationDtos());
             }
         } else {
             if (isViewAttached()) {
@@ -35,13 +33,13 @@ class HistoryListPresenter extends HistoryAndFavoriteBasePresenter<HistoryListCo
         if (event.getError() == null) {
             if (isViewAttached()) {
                 getView().hideProgress();
-                getView().insertedOrAddHistoryList(event.getTranslationDTO());
+                getView().insertedOrAddHistoryList(event.getTranslationDto());
             }
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFavoriteStatusChangedEvent(TranslationDTO event) {
+    public void onFavoriteStatusChangedEvent(TranslationDto event) {
         if (isViewAttached()) {
             getView().updateHistoryList(event);
         }

@@ -1,6 +1,6 @@
 package com.example.narek.project_mobilization_yandex.ui.history_and_favorite.favorite_list;
 
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.FavoriteTranslationsEvent;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.base_history_favorite.HistoryAndFavoriteBasePresenter;
 
@@ -21,7 +21,7 @@ class FavoriteListPresenter extends HistoryAndFavoriteBasePresenter<FavoriteList
         if (event.getError() == null) {
             if (isViewAttached()) {
                 getView().hideProgress();
-                getView().showFavoriteList(event.getTranslationDTOs());
+                getView().showFavoriteList(event.getTranslationDtos());
             }
         } else {
             if (isViewAttached()) {
@@ -33,7 +33,7 @@ class FavoriteListPresenter extends HistoryAndFavoriteBasePresenter<FavoriteList
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFavoriteStatusChangedEvent(TranslationDTO event) {
+    public void onFavoriteStatusChangedEvent(TranslationDto event) {
         if (!isViewAttached()) {
             return;
         }

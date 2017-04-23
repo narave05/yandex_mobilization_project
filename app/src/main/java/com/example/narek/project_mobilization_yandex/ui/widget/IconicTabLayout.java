@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 
@@ -14,8 +15,7 @@ public class IconicTabLayout extends TabLayout implements TabLayout.OnTabSelecte
 
     int icons[] = {R.drawable.ic_tab_translate, R.drawable.ic_tab_fav};
     private int selectedIconColor = Color.BLACK;
-    // TODO: 20.04.2017
-    private int unSelectedIconColor = Color.parseColor("#cbcbcb");
+    private int unSelectedIconColor = ContextCompat.getColor(getContext(), R.color.bot_tab_un_selected_icon_color);
 
     public IconicTabLayout(Context context) {
         super(context);
@@ -41,12 +41,15 @@ public class IconicTabLayout extends TabLayout implements TabLayout.OnTabSelecte
     public void setUpIcons() {
         for (int i = 0; i < icons.length; i++) {
             Tab tab = getTabAt(i);
-            tab.setIcon(icons[i]);
-            if (i == 0) {
-                tab.getIcon().setColorFilter(selectedIconColor, PorterDuff.Mode.SRC_IN);
-            } else {
-                tab.getIcon().setColorFilter(unSelectedIconColor, PorterDuff.Mode.SRC_IN);
+            if (tab != null) {
+                tab.setIcon(icons[i]);
+                if (i == 0) {
+                    tab.getIcon().setColorFilter(selectedIconColor, PorterDuff.Mode.SRC_IN);
+                } else {
+                    tab.getIcon().setColorFilter(unSelectedIconColor, PorterDuff.Mode.SRC_IN);
+                }
             }
+
 
         }
     }

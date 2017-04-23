@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.narek.project_mobilization_yandex.R;
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.HistoryChangeListener;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.base_history_favorite.HistoryAndFavoriteBaseFragment;
 
@@ -21,8 +21,7 @@ public class HistoryListFragment extends HistoryAndFavoriteBaseFragment<HistoryL
     private HistoryChangeListener mHistoryChangeListener;
 
     public static HistoryListFragment newInstance() {
-        HistoryListFragment fragment = new HistoryListFragment();
-        return fragment;
+        return new HistoryListFragment();
     }
 
     @Override
@@ -53,24 +52,24 @@ public class HistoryListFragment extends HistoryAndFavoriteBaseFragment<HistoryL
     }
 
     @Override
-    public void showHistoryList(List<TranslationDTO> data) {
+    public void showHistoryList(List<TranslationDto> data) {
         setupAdapter(data);
     }
 
     @Override
-    public void insertedOrAddHistoryList(TranslationDTO translationDTO) {
+    public void insertedOrAddHistoryList(TranslationDto translationDto) {
         if (mAdapter == null) {
-            List<TranslationDTO> list = new ArrayList<>();
-            list.add(translationDTO);
+            List<TranslationDto> list = new ArrayList<>();
+            list.add(translationDto);
             setupAdapter(list);
         } else {
-            mAdapter.insertedOrUpdatePositionItem(translationDTO);
+            mAdapter.insertedOrUpdatePositionItem(translationDto);
         }
     }
 
     @Override
-    public void updateHistoryList(TranslationDTO translationDTO) {
-        mAdapter.updateItem(translationDTO);
+    public void updateHistoryList(TranslationDto translationDto) {
+        mAdapter.updateItem(translationDto);
     }
 
 

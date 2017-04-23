@@ -19,6 +19,6 @@ public class ExampleView extends android.support.v7.widget.AppCompatTextView {
         super.onAttachedToWindow();
         setTypeface(null, Typeface.ITALIC);
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        setTextColor(ContextCompat.getColor(getContext(), R.color.color1));
+        setTextColor(ContextCompat.getColor(getContext(), R.color.blue));
     }
 }

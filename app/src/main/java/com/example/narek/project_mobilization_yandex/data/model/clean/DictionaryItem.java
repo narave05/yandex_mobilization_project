@@ -14,18 +14,17 @@ import io.realm.RealmList;
 
 public class DictionaryItem implements Serializable {
 
-    // FIXME: 11.04.2017 primary key chkas
     private String mPartOfSpeech;
     private List<TranslationItem> mItemList;
 
     public DictionaryItem() {
 
     }
-    public DictionaryItem(DictionaryItemDao dictionaryItemDao) {
+    DictionaryItem(DictionaryItemDao dictionaryItemDao) {
         mPartOfSpeech = dictionaryItemDao.getPartOfSpeech();
         mItemList = generateTranslationItemList(dictionaryItemDao.getTranslationList());
     }
-    public DictionaryItem(DictionaryResponse.Def dictionaryResponse) {
+    DictionaryItem(DictionaryResponse.Def dictionaryResponse) {
         mPartOfSpeech = dictionaryResponse.getPartOfSpeech();
         mItemList = generateTranslationItems(dictionaryResponse.getTranslatedList());
     }

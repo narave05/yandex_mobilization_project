@@ -6,7 +6,7 @@ import android.content.Intent;
 import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
 import com.example.narek.project_mobilization_yandex.data.model.clean.LanguagePair;
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.DeleteAllTranslationsEvent;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.TranslatedEvent;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryPresenter;
@@ -26,7 +26,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     private String mLastInputText = null;
     private String mLastTranslatedText = null;
     private LanguagePair mLanguagePair = new LanguagePair();
-    private TranslationDTO mLastTranslationDTO = null;
+    private TranslationDto mLastTranslationDto = null;
 
     @Override
     public void onCreate() {
@@ -91,10 +91,10 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
 
     @Override
     public void handleFavoriteClick() {
-        if (mLastTranslationDTO != null) {
-            mLastTranslationDTO.setFavorite(!mLastTranslationDTO.isFavorite());
-            getRepository().updateTranslationFavoriteStatusAsync(mLastTranslationDTO.getPrimaryKey(), mLastTranslationDTO.isFavorite());
-            EventBus.getDefault().post(mLastTranslationDTO);
+        if (mLastTranslationDto != null) {
+            mLastTranslationDto.setFavorite(!mLastTranslationDto.isFavorite());
+            getRepository().updateTranslationFavoriteStatusAsync(mLastTranslationDto.getPrimaryKey(), mLastTranslationDto.isFavorite());
+            EventBus.getDefault().post(mLastTranslationDto);
         }
     }
 
@@ -134,7 +134,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLoadTranslationEvent(TranslatedEvent event) {
         if (event.getError() == null) {
-            showTranslation(event.getTranslationDTO());
+            showTranslation(event.getTranslationDto());
         } else {
             showError(event.getError());
         }
@@ -150,8 +150,8 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFavoriteStatusChangedEvent(TranslationDTO event) {
-        if (!isViewAttached() || !event.equals(mLastTranslationDTO)) {
+    public void onFavoriteStatusChangedEvent(TranslationDto event) {
+        if (!isViewAttached() || !event.equals(mLastTranslationDto)) {
             return;
         }
         getView().showFavoriteIcon(event.isFavorite());
@@ -160,7 +160,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     private void clearInputData() {
         mLastInputText = null;
         mLastTranslatedText = null;
-        mLastTranslationDTO = null;
+        mLastTranslationDto = null;
         if (isViewAttached()) {
             getView().hideFavoriteIcon();
             getView().hideProgress();
@@ -203,7 +203,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
         }
     }
 
-    private void showTranslation(TranslationDTO data) {
+    private void showTranslation(TranslationDto data) {
 
         if (data == null) {
             clearInputData();
@@ -215,7 +215,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
             if (!data.getOriginalText().equalsIgnoreCase(mLastInputText)) {
                 return;
             }
-            mLastTranslationDTO = data;
+            mLastTranslationDto = data;
             mLastTranslatedText = data.getTranslatedTextList().get(0);
             if (data.hasDictionary()) {
                 getView().showTranslation(mLastTranslatedText, data.getDictionary());

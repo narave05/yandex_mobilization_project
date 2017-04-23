@@ -2,27 +2,27 @@ package com.example.narek.project_mobilization_yandex.ui.history_and_favorite.ba
 
 import android.widget.Filter;
 
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchFilter extends Filter {
-    HistoryAndFavoriteBaseAdapter mAdapter;
+ class SearchFilter extends Filter {
+    private HistoryAndFavoriteBaseAdapter mAdapter;
 
-    public SearchFilter(HistoryAndFavoriteBaseAdapter adapter) {
+    SearchFilter(HistoryAndFavoriteBaseAdapter adapter) {
         mAdapter = adapter;
     }
 
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
         FilterResults results = new FilterResults();
-        List<TranslationDTO> originalList = mAdapter.getOriginalTranslationDOTList();
+        List<TranslationDto> originalList = mAdapter.getOriginalTranslationDOTList();
         if (constraint != null && constraint.length() > 0) {
-            List<TranslationDTO> filteredList = new ArrayList<>();
-            for (TranslationDTO translationDTO : originalList) {
-                if (containsIgnoreCase(translationDTO, constraint.toString())) {
-                    filteredList.add(translationDTO);
+            List<TranslationDto> filteredList = new ArrayList<>();
+            for (TranslationDto translationDto : originalList) {
+                if (containsIgnoreCase(translationDto, constraint.toString())) {
+                    filteredList.add(translationDto);
                 }
             }
             results.count = filteredList.size();
@@ -38,11 +38,11 @@ public class SearchFilter extends Filter {
 
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        mAdapter.replaceList((List<TranslationDTO>) results.values);
+        mAdapter.replaceList((List<TranslationDto>) results.values);
     }
 
-    private boolean containsIgnoreCase(TranslationDTO translationDTO, String queryText) {
-        return translationDTO.getOriginalText().toLowerCase().contains(queryText.toLowerCase()) ||
-                translationDTO.getTranslatedTextList().get(0).toLowerCase().contains(queryText.toLowerCase());
+    private boolean containsIgnoreCase(TranslationDto translationDto, String queryText) {
+        return translationDto.getOriginalText().toLowerCase().contains(queryText.toLowerCase()) ||
+                translationDto.getTranslatedTextList().get(0).toLowerCase().contains(queryText.toLowerCase());
     }
 }

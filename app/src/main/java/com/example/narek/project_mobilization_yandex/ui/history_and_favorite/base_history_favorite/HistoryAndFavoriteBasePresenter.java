@@ -1,6 +1,6 @@
 package com.example.narek.project_mobilization_yandex.ui.history_and_favorite.base_history_favorite;
 
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryPresenter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,9 +60,9 @@ public abstract class HistoryAndFavoriteBasePresenter<V extends HistoryAndFavori
     }
 
     @Override
-    public void handleFavoriteStatusChanged(TranslationDTO translationDTO) {
-        getRepository().updateTranslationFavoriteStatusAsync(translationDTO.getPrimaryKey(), translationDTO.isFavorite());
-        EventBus.getDefault().post(translationDTO);
+    public void handleFavoriteStatusChanged(TranslationDto translationDto) {
+        getRepository().updateTranslationFavoriteStatusAsync(translationDto.getPrimaryKey(), translationDto.isFavorite());
+        EventBus.getDefault().post(translationDto);
     }
 
 

@@ -40,7 +40,7 @@ public class DictionaryItemView extends LinearLayout {
         TextView partOfSpeechText = new TextView(getContext());
         partOfSpeechText.setText(dictionaryItem.getPartOfSpeech());
         partOfSpeechText.setTypeface(null, Typeface.ITALIC);
-        partOfSpeechText.setTextColor(ContextCompat.getColor(getContext(), R.color.color3));
+        partOfSpeechText.setTextColor(ContextCompat.getColor(getContext(), R.color.light_brown));
         partOfSpeechText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         addView(partOfSpeechText);
     }

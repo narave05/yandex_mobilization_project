@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.narek.project_mobilization_yandex.R;
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,13 +36,13 @@ public  class HistoryViewHolder extends RecyclerView.ViewHolder {
         mContext = itemView.getContext();
     }
 
-    public void bind(TranslationDTO translationDTO) {
+    public void bind(TranslationDto translationDto) {
 
-        mOriginalText.setText(translationDTO.getOriginalText());
-        mTranslatedText.setText(translationDTO.getTranslatedTextList().get(0));
-        mLanguagePairCodText.setText(translationDTO.getLanguagePairCodText().toUpperCase());
+        mOriginalText.setText(translationDto.getOriginalText());
+        mTranslatedText.setText(translationDto.getTranslatedTextList().get(0));
+        mLanguagePairCodText.setText(translationDto.getLanguagePairCodText().toUpperCase());
         int color;
-        if (translationDTO.isFavorite()) {
+        if (translationDto.isFavorite()) {
             color = ContextCompat.getColor(mContext, R.color.fav_active_icon_color);
         } else {
             color = ContextCompat.getColor(mContext, R.color.fav_inactive_icon_color);

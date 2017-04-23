@@ -10,7 +10,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.example.narek.project_mobilization_yandex.R;
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.ListStateListener;
 
 import java.util.ArrayList;
@@ -21,21 +21,21 @@ public class HistoryAndFavoriteBaseAdapter
         implements Filterable {
 
     private boolean isFiltered;
-    private List<TranslationDTO> mTranslationDTOList;
-    private List<TranslationDTO> mOriginalTranslationDOTList;
+    private List<TranslationDto> mTranslationDtoList;
+    private List<TranslationDto> mOriginalTranslationDOTList;
     private SearchFilter mSearchFilter;
     private OnItemClickListener mOnItemClickListener;
     private ListStateListener mListStateListener;
     private RecyclerView mRecyclerView;
 
-    public HistoryAndFavoriteBaseAdapter(List<TranslationDTO> translationDTOList, Fragment fragment) {
-        mTranslationDTOList = translationDTOList;
-        mOriginalTranslationDOTList = translationDTOList;
+    HistoryAndFavoriteBaseAdapter(List<TranslationDto> translationDtoList, Fragment fragment) {
+        mTranslationDtoList = translationDtoList;
+        mOriginalTranslationDOTList = translationDtoList;
         mOnItemClickListener = (OnItemClickListener) fragment;
         mListStateListener = (ListStateListener) fragment;
 
         if (mListStateListener != null) {
-            mListStateListener.onListStateChange(mTranslationDTOList.isEmpty(), false);
+            mListStateListener.onListStateChange(mTranslationDtoList.isEmpty(), false);
         }
     }
 
@@ -57,13 +57,13 @@ public class HistoryAndFavoriteBaseAdapter
 
     @Override
     public void onBindViewHolder(final HistoryViewHolder holder, int position) {
-        final TranslationDTO translationDTO = mTranslationDTOList.get(position);
-        holder.bind(translationDTO);
+        final TranslationDto translationDto = mTranslationDtoList.get(position);
+        holder.bind(translationDto);
     }
 
     @Override
     public int getItemCount() {
-        return mTranslationDTOList.size();
+        return mTranslationDtoList.size();
     }
 
     @Override
@@ -76,38 +76,38 @@ public class HistoryAndFavoriteBaseAdapter
 
     private void onFavoriteIconClick(HistoryViewHolder historyViewHolder) {
         if (historyViewHolder.getAdapterPosition() != RecyclerView.NO_POSITION) {
-            final TranslationDTO translationDTO = mTranslationDTOList.get(historyViewHolder.getAdapterPosition());
+            final TranslationDto translationDto = mTranslationDtoList.get(historyViewHolder.getAdapterPosition());
             if (mOnItemClickListener != null) {
-                translationDTO.setFavorite(!translationDTO.isFavorite());
-                mOnItemClickListener.onItemClickListener(translationDTO);
+                translationDto.setFavorite(!translationDto.isFavorite());
+                mOnItemClickListener.onItemClickListener(translationDto);
             }
         }
     }
 
-    public void insertedOrUpdatePositionItem(TranslationDTO translationDTO) {
-        int index = mTranslationDTOList.indexOf(translationDTO);
+    public void insertedOrUpdatePositionItem(TranslationDto translationDto) {
+        int index = mTranslationDtoList.indexOf(translationDto);
         if (index > -1) {
-            mTranslationDTOList.remove(index);
-            mOriginalTranslationDOTList.remove(translationDTO);
+            mTranslationDtoList.remove(index);
+            mOriginalTranslationDOTList.remove(translationDto);
             notifyItemRemoved(index);
         }
-        addFirst(translationDTO);
+        addFirst(translationDto);
     }
 
-    public void updateItem(TranslationDTO translationDTO) {
+    public void updateItem(TranslationDto translationDto) {
 
-        int index = mTranslationDTOList.indexOf(translationDTO);
+        int index = mTranslationDtoList.indexOf(translationDto);
         if (index > -1) {
-            mTranslationDTOList.set(index, translationDTO);
+            mTranslationDtoList.set(index, translationDto);
             notifyItemChanged(index);
         }
     }
 
-    public void addFirst(TranslationDTO translationDTO) {
+    public void addFirst(TranslationDto translationDto) {
         if (isFiltered) {
-            addFirstFromSelectedList(mOriginalTranslationDOTList, translationDTO);
+            addFirstFromSelectedList(mOriginalTranslationDOTList, translationDto);
         } else {
-            addFirstFromSelectedList(mTranslationDTOList, translationDTO);
+            addFirstFromSelectedList(mTranslationDtoList, translationDto);
             notifyItemInserted(0);
             if (mRecyclerView != null) {
                 mRecyclerView.smoothScrollToPosition(0);
@@ -115,41 +115,41 @@ public class HistoryAndFavoriteBaseAdapter
         }
     }
 
-    private void addFirstFromSelectedList(List<TranslationDTO> list, TranslationDTO translationDTO) {
+    private void addFirstFromSelectedList(List<TranslationDto> list, TranslationDto translationDto) {
         if (list.size() == 0) {
-            list.add(translationDTO);
+            list.add(translationDto);
         } else {
-            list.add(0, translationDTO);
+            list.add(0, translationDto);
         }
         if (mListStateListener != null) {
-            mListStateListener.onListStateChange(mTranslationDTOList.isEmpty(), isFiltered);
+            mListStateListener.onListStateChange(mTranslationDtoList.isEmpty(), isFiltered);
         }
     }
 
-    public void replaceList(List<TranslationDTO> newList) {
-        mTranslationDTOList = newList;
+    void replaceList(List<TranslationDto> newList) {
+        mTranslationDtoList = newList;
         if (mListStateListener != null) {
-            mListStateListener.onListStateChange(mTranslationDTOList.isEmpty(), isFiltered);
+            mListStateListener.onListStateChange(mTranslationDtoList.isEmpty(), isFiltered);
         }
         notifyDataSetChanged();
     }
 
-    public void removeItem(TranslationDTO translationDTO) {
-        int index = mTranslationDTOList.indexOf(translationDTO);
+    public void removeItem(TranslationDto translationDto) {
+        int index = mTranslationDtoList.indexOf(translationDto);
         if (index > -1) {
-            mTranslationDTOList.remove(index);
+            mTranslationDtoList.remove(index);
             notifyItemRemoved(index);
         }
-        mOriginalTranslationDOTList.remove(translationDTO);
+        mOriginalTranslationDOTList.remove(translationDto);
         if (mListStateListener != null) {
-            mListStateListener.onListStateChange(mTranslationDTOList.isEmpty(), isFiltered);
+            mListStateListener.onListStateChange(mTranslationDtoList.isEmpty(), isFiltered);
         }
     }
 
-    public void deleteAllList() {
+    void deleteAllList() {
         isFiltered = false;
-        ArrayList<TranslationDTO> emptyList = new ArrayList<>();
-        mTranslationDTOList = emptyList;
+        ArrayList<TranslationDto> emptyList = new ArrayList<>();
+        mTranslationDtoList = emptyList;
         mOriginalTranslationDOTList = emptyList;
         notifyDataSetChanged();
         if (mListStateListener != null) {
@@ -157,16 +157,16 @@ public class HistoryAndFavoriteBaseAdapter
         }
     }
 
-    public List<TranslationDTO> getOriginalTranslationDOTList() {
+    List<TranslationDto> getOriginalTranslationDOTList() {
         return mOriginalTranslationDOTList;
     }
 
-    public void setFilteredStatus(boolean filtered) {
+    void setFilteredStatus(boolean filtered) {
         isFiltered = filtered;
     }
 
-    public interface OnItemClickListener {
-        void onItemClickListener(TranslationDTO translationDTO);
+    interface OnItemClickListener {
+        void onItemClickListener(TranslationDto translationDto);
     }
 
 }

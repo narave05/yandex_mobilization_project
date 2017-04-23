@@ -15,6 +15,6 @@ class MeanView extends android.support.v7.widget.AppCompatTextView{
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
-        setTextColor(ContextCompat.getColor(getContext(), R.color.color2));
+        setTextColor(ContextCompat.getColor(getContext(), R.color.brown));
     }
 }

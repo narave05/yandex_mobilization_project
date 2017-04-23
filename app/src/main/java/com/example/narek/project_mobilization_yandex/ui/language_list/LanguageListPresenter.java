@@ -74,7 +74,6 @@ class LanguageListPresenter extends BaseRepositoryPresenter<LanguageListContract
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLoadLanguageListEvent(AvailableLanguageEvent event) {
-        Log.e("onLoadEvent: ", " " + "onLoadEvent");
         if (event.getError() == null) {
             showLanguageList(event.getLanguageList());
         } else {

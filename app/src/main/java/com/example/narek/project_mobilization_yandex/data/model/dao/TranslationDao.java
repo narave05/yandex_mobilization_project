@@ -1,7 +1,6 @@
 package com.example.narek.project_mobilization_yandex.data.model.dao;
 
-import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary;
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,14 +28,14 @@ public class TranslationDao extends RealmObject {
     public TranslationDao() {
     }
 
-    public TranslationDao(TranslationDTO translationDTO) {
-        primaryKey = translationDTO.getPrimaryKey();
+    public TranslationDao(TranslationDto translationDto) {
+        primaryKey = translationDto.getPrimaryKey();
         createdOrUpdatedDate = new Date();
-        mLanguagePairCodText = translationDTO.getLanguagePairCodText();
-        mOriginalText = translationDTO.getOriginalText();
-        mTranslatedTexts = generateTranslatedTexts(translationDTO.getTranslatedTextList());
-        mDictionary = translationDTO.getDictionary() != null ? new DictionaryDao(translationDTO.getDictionary()) : null;
-        isFavorite = translationDTO.isFavorite();
+        mLanguagePairCodText = translationDto.getLanguagePairCodText();
+        mOriginalText = translationDto.getOriginalText();
+        mTranslatedTexts = generateTranslatedTexts(translationDto.getTranslatedTextList());
+        mDictionary = translationDto.getDictionary() != null ? new DictionaryDao(translationDto.getDictionary()) : null;
+        isFavorite = translationDto.isFavorite();
     }
 
     private RealmList<RealmString> generateTranslatedTexts(List<String> translatedTexts) {

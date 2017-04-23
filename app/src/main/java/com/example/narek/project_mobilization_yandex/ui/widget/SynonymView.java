@@ -20,6 +20,6 @@ public class SynonymView extends android.support.v7.widget.AppCompatTextView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
-        setTextColor(ContextCompat.getColor(getContext(), R.color.color1));
+        setTextColor(ContextCompat.getColor(getContext(), R.color.blue));
     }
 }

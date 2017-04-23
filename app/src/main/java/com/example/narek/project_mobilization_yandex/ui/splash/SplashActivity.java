@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.example.narek.project_mobilization_yandex.R;
-import com.example.narek.project_mobilization_yandex.ui.base.BaseActivity;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryActivity;
 import com.example.narek.project_mobilization_yandex.ui.main.RootActivity;
 

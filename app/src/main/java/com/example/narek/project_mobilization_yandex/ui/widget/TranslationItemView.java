@@ -65,7 +65,7 @@ public class TranslationItemView extends LinearLayout {
 
     private void generateNumberView(int number, FrameLayout rootFrameLayout) {
         TextView numberText = new TextView(getContext());
-        numberText.setTextColor(ContextCompat.getColor(getContext(), R.color.color4));
+        numberText.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
         numberText.setText(String.valueOf(number));
         numberText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         int topPadding = DimenUtils.dpToPx(getContext(), 3);
@@ -91,7 +91,7 @@ public class TranslationItemView extends LinearLayout {
                 Spannable text = new SpannableString(genText);
                 int start = 0;
                 int end = genText.length();
-                text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.color4)),
+                text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.gray)),
                         start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 text.setSpan(new StyleSpan(Typeface.ITALIC), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannableString.append(text);

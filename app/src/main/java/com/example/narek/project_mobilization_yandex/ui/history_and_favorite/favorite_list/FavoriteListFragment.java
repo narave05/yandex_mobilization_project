@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.narek.project_mobilization_yandex.R;
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.base_history_favorite.HistoryAndFavoriteBaseFragment;
 
 import java.util.ArrayList;
@@ -17,8 +17,7 @@ public class FavoriteListFragment extends HistoryAndFavoriteBaseFragment<Favorit
         implements FavoriteListContract.IView {
 
     public static FavoriteListFragment newInstance() {
-        FavoriteListFragment fragment = new FavoriteListFragment();
-        return fragment;
+        return new FavoriteListFragment();
     }
 
 
@@ -35,23 +34,23 @@ public class FavoriteListFragment extends HistoryAndFavoriteBaseFragment<Favorit
     }
 
     @Override
-    public void showFavoriteList(List<TranslationDTO> data) {
+    public void showFavoriteList(List<TranslationDto> data) {
         setupAdapter(data);
     }
 
     @Override
-    public void addFavoriteItem(TranslationDTO translationDTO) {
+    public void addFavoriteItem(TranslationDto translationDto) {
         if (mAdapter == null) {
-            List<TranslationDTO> list = new ArrayList<>();
-            list.add(translationDTO);
+            List<TranslationDto> list = new ArrayList<>();
+            list.add(translationDto);
             setupAdapter(list);
         } else {
-            mAdapter.addFirst(translationDTO);
+            mAdapter.addFirst(translationDto);
         }
     }
 
     @Override
-    public void removeFavoriteItem(TranslationDTO translationDTO) {
-        mAdapter.removeItem(translationDTO);
+    public void removeFavoriteItem(TranslationDto translationDto) {
+        mAdapter.removeItem(translationDto);
     }
 }

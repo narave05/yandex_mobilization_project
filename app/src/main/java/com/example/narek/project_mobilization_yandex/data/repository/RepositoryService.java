@@ -14,7 +14,7 @@ import com.example.narek.project_mobilization_yandex.data.model.clean.Dictionary
 import com.example.narek.project_mobilization_yandex.data.model.clean.Language;
 import com.example.narek.project_mobilization_yandex.data.model.dao.LanguageDao;
 import com.example.narek.project_mobilization_yandex.data.model.dao.TranslationDao;
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.AllTranslationsEvent;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.AvailableLanguageEvent;
 import com.example.narek.project_mobilization_yandex.data.model.event_bus_dto.FavoriteTranslationsEvent;
@@ -132,9 +132,9 @@ public class RepositoryService extends IntentService {
         TranslationDao translationFromDb = mDatabaseRepository.getTranslationByPrimaryKey(realm, primaryKey);
         if (translationFromDb != null) {
 
-            TranslationDTO translationDTO = new TranslationDTO(translationFromDb);
+            TranslationDto translationDto = new TranslationDto(translationFromDb);
 
-            EventBus.getDefault().post(new TranslatedEvent(translationDTO));
+            EventBus.getDefault().post(new TranslatedEvent(translationDto));
             if (!realm.isInTransaction()) {
                 realm.beginTransaction();
             }
@@ -153,15 +153,15 @@ public class RepositoryService extends IntentService {
 
                 Response<DictionaryResponse> dictionaryDataResponse = mNetworkRepository.findDictionaryData(originalText, languagePairCods);
 
-                TranslationDTO translationDTO = new TranslationDTO(originalText, languagePairCods, translationTextList, null);
+                TranslationDto translationDto = new TranslationDto(originalText, languagePairCods, translationTextList, null);
                 if (dictionaryDataResponse.isSuccessful()) {
                     Dictionary dictionary = new Dictionary(dictionaryDataResponse.body().getDictionaryList());
-                    translationDTO.setDictionary(dictionary);
+                    translationDto.setDictionary(dictionary);
                 }
 
-                EventBus.getDefault().post(new TranslatedEvent(translationDTO));
+                EventBus.getDefault().post(new TranslatedEvent(translationDto));
 
-                TranslationDao translationDao = new TranslationDao(translationDTO);
+                TranslationDao translationDao = new TranslationDao(translationDto);
                 saveOrUpdateTranslation(translationDao);
 
             } else {
@@ -191,16 +191,16 @@ public class RepositoryService extends IntentService {
             realm.close();
             return;
         }
-        List<TranslationDTO> historyList = new ArrayList<>();
-        List<TranslationDTO> favoriteList = new ArrayList<>();
+        List<TranslationDto> historyList = new ArrayList<>();
+        List<TranslationDto> favoriteList = new ArrayList<>();
 
         for (TranslationDao translationDao : allTranslations) {
 
-            TranslationDTO translationDTO = new TranslationDTO(translationDao);
-            historyList.add(translationDTO);
+            TranslationDto translationDto = new TranslationDto(translationDao);
+            historyList.add(translationDto);
 
-            if (translationDTO.isFavorite()) {
-                favoriteList.add(translationDTO);
+            if (translationDto.isFavorite()) {
+                favoriteList.add(translationDto);
             }
         }
 

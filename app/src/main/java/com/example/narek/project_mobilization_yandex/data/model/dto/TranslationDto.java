@@ -6,7 +6,7 @@ import com.example.narek.project_mobilization_yandex.data.model.dao.TranslationD
 import java.io.Serializable;
 import java.util.List;
 
-public class TranslationDTO implements Serializable {
+public class TranslationDto implements Serializable {
 
 
     private String primaryKey;
@@ -17,11 +17,11 @@ public class TranslationDTO implements Serializable {
     private Dictionary mDictionary;
     private boolean isFavorite;
 
-    public TranslationDTO() {
+    public TranslationDto() {
 
     }
 
-    public TranslationDTO(TranslationDao translationDao) {
+    public TranslationDto(TranslationDao translationDao) {
         primaryKey = translationDao.getPrimaryKey();
         mLanguagePairCodText = translationDao.getLanguagePairCodText();
         mOriginalText = translationDao.getOriginalText();
@@ -31,7 +31,7 @@ public class TranslationDTO implements Serializable {
     }
 
 
-    public TranslationDTO(String originalText, String languagePairCodText, List<String> translatedTexts, Dictionary dictionary) {
+    public TranslationDto(String originalText, String languagePairCodText, List<String> translatedTexts, Dictionary dictionary) {
         mOriginalText = originalText;
         mTranslatedTexts = translatedTexts;
         mDictionary = dictionary;
@@ -83,12 +83,12 @@ public class TranslationDTO implements Serializable {
             return false;
         }
 
-        if (!(obj instanceof TranslationDTO)) {
+        if (!(obj instanceof TranslationDto)) {
             return false;
         }
 
-        TranslationDTO translationDTO = ((TranslationDTO) obj);
-        return primaryKey.equals(translationDTO.getPrimaryKey());
+        TranslationDto translationDto = ((TranslationDto) obj);
+        return primaryKey.equals(translationDto.getPrimaryKey());
     }
 
     @Override

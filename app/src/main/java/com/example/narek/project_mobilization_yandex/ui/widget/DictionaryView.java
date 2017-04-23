@@ -45,7 +45,7 @@ public class DictionaryView extends LinearLayout {
         if (transcription != null && !transcription.isEmpty()) {
             transcription = "[" + transcription + "]";
             Spannable spannableTranscription = new SpannableString(transcription);
-            spannableTranscription.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.color4)),
+            spannableTranscription.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.gray)),
                     0, transcription.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             headerTextBuilder.append(spannableTranscription);
         }

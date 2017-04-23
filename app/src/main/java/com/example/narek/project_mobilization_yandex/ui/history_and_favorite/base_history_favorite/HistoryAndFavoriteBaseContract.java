@@ -1,6 +1,6 @@
 package com.example.narek.project_mobilization_yandex.ui.history_and_favorite.base_history_favorite;
 
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 import com.example.narek.project_mobilization_yandex.ui.base_repository.BaseRepositoryContract;
 
 public interface HistoryAndFavoriteBaseContract {
@@ -15,7 +15,7 @@ public interface HistoryAndFavoriteBaseContract {
 
         void handleSearchText(String newText);
 
-        void handleFavoriteStatusChanged(TranslationDTO translationDTO);
+        void handleFavoriteStatusChanged(TranslationDto translationDto);
     }
 
     interface IView extends BaseRepositoryContract.IView {

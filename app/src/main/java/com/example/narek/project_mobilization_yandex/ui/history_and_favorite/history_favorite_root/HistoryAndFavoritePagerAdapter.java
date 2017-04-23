@@ -1,20 +1,22 @@
 package com.example.narek.project_mobilization_yandex.ui.history_and_favorite.history_favorite_root;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.narek.project_mobilization_yandex.R;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.favorite_list.FavoriteListFragment;
 import com.example.narek.project_mobilization_yandex.ui.history_and_favorite.history_list.HistoryListFragment;
 
-public class HistoryAndFavoritePagerAdapter extends FragmentPagerAdapter {
+class HistoryAndFavoritePagerAdapter extends FragmentPagerAdapter {
 
-    // TODO: 12.04.2017 move to recurse
-    private String[] mTitles = new String[]{"История", "Избрание"};
+    private String[] mTitles;
     private Fragment[] mFragments = new Fragment[]{HistoryListFragment.newInstance(), FavoriteListFragment.newInstance()};
 
-    public HistoryAndFavoritePagerAdapter(FragmentManager manager) {
+    HistoryAndFavoritePagerAdapter(Context context, FragmentManager manager) {
         super(manager);
+        mTitles = new String[]{context.getString(R.string.favorite_text), context.getString(R.string.history_text)};
     }
 
     @Override
@@ -31,7 +33,6 @@ public class HistoryAndFavoritePagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return mTitles[position];
     }
-
 
 
 }

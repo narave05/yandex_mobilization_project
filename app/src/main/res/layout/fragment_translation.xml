@@ -53,7 +53,7 @@
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:padding="3dp"
-                android:tint="@color/color4"
+                android:tint="@color/gray"
                 android:visibility="gone"
                 app:srcCompat="@drawable/ic_tab_fav"/>
 

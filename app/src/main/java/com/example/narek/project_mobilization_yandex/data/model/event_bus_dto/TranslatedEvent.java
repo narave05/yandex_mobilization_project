@@ -1,13 +1,13 @@
 package com.example.narek.project_mobilization_yandex.data.model.event_bus_dto;
 
-import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDTO;
+import com.example.narek.project_mobilization_yandex.data.model.dto.TranslationDto;
 
 public class TranslatedEvent {
     private String mError;
-    private TranslationDTO mTranslationDTO;
+    private TranslationDto mTranslationDto;
 
-    public TranslatedEvent( TranslationDTO translationDTO) {
-        mTranslationDTO = translationDTO;
+    public TranslatedEvent( TranslationDto translationDto) {
+        mTranslationDto = translationDto;
     }
 
     public TranslatedEvent( String  error) {
@@ -22,11 +22,11 @@ public class TranslatedEvent {
         mError = error;
     }
 
-    public TranslationDTO getTranslationDTO() {
-        return mTranslationDTO;
+    public TranslationDto getTranslationDto() {
+        return mTranslationDto;
     }
 
-    public void setTranslationDTO(TranslationDTO translationDTO) {
-        mTranslationDTO = translationDTO;
+    public void setTranslationDto(TranslationDto translationDto) {
+        mTranslationDto = translationDto;
     }
 }
