@@ -39,7 +39,7 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
         implements TranslationContract.IView,
         TranslationInputView.TextChangListener,
         TranslationInputView.OnCancelClick,
-        ErrorLayout.OnClickRepeat {
+        ErrorLayout.OnClickRetry {
 
     public static final int REQUEST_CODE = 152;
 
@@ -148,7 +148,7 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
             mErrorLayout = new ErrorLayout(getActivity());
             mErrorLayout.setErrorTextAndHint(getString(R.string.error_connection_text),
                     getString(R.string.error_connection_hint_text));
-            mErrorLayout.setOnClickRepeat(this);
+            mErrorLayout.setOnClickRetry(this);
         }
         mRootScrollView.removeAllViews();
         mRootScrollView.addView(mErrorLayout);
@@ -232,7 +232,7 @@ public class TranslationFragment extends BaseRepositoryFragment<TranslationContr
     }
 
     @Override
-    public void onClickRepeat() {
-        presenter.handleRepeatClick();
+    public void onClickRetry() {
+        presenter.handleRetryClick();
     }
 }

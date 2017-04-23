@@ -13,7 +13,7 @@
     <string name="language_list_invalid">language list invalid</string>
     <string name="error_connection_text">Ошибка соединения</string>
     <string name="error_text">Ошибка</string>
-    <string name="error_connection_hint_text">Проверьте подключение к   Интернету и повторите попытку.</string>
-    <string name="error_hint_text">Что то пошло не так повторите попытку.</string>
+    <string name="error_connection_hint_text">Проверьте подключение к \n Интернету и повторите попытку.</string>
+    <string name="error_hint_text">Что то пошло не так \n повторите попытку.</string>
 
 </resources>

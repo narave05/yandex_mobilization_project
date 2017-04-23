@@ -99,7 +99,7 @@ class TranslationPresenter extends BaseRepositoryPresenter<TranslationContract.I
     }
 
     @Override
-    public void handleRepeatClick() {
+    public void handleRetryClick() {
         getTranslationData();
     }
 

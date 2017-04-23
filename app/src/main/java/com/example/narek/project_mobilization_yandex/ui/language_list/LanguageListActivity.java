@@ -28,7 +28,7 @@ import static com.example.narek.project_mobilization_yandex.util.constant.Consta
 import static com.example.narek.project_mobilization_yandex.util.constant.Constants.SECOND_LANGUAGE_LIST;
 
 public class LanguageListActivity extends BaseRepositoryActivity<LanguageListContract.IView, LanguageListContract.IPresenter>
-        implements LanguageListContract.IView, LanguageListAdapter.OnItemClickListener, ErrorLayout.OnClickRepeat {
+        implements LanguageListContract.IView, LanguageListAdapter.OnItemClickListener, ErrorLayout.OnClickRetry {
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, LanguageListActivity.class);
@@ -52,7 +52,7 @@ public class LanguageListActivity extends BaseRepositoryActivity<LanguageListCon
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_language_list);
-        mErrorLayout.setOnClickRepeat(this);
+        mErrorLayout.setOnClickRetry(this);
         Intent intent = getIntent();
         if (intent != null) {
             mLanguageListType = intent.getIntExtra(LANGUAGE_LIST_TYPE_INTENT_KEY, 0);
@@ -149,7 +149,7 @@ public class LanguageListActivity extends BaseRepositoryActivity<LanguageListCon
     }
 
     @Override
-    public void onClickRepeat() {
-        presenter.handleRepeatClick();
+    public void onClickRetry() {
+        presenter.handleRetryClick();
     }
 }

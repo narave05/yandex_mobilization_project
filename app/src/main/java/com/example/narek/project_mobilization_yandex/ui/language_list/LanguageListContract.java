@@ -27,7 +27,7 @@ interface LanguageListContract {
 
         void startLoadData();
 
-        void handleRepeatClick();
+        void handleRetryClick();
 
         void handleLanguageSelected(Language language);
 

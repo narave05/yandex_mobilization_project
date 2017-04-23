@@ -11,7 +11,7 @@
 
     <color name="color5">#cccccc</color>
     <color name="color6">#e5e5e5</color>
-
+    <color name="retry_button_color">#e5e5e5</color>
     <color name="language_line_color">#e4e4e4</color>
     <color name="language_list_item_color">#f6f5f3</color>
     <color name="history_fav_tab_indicator_color">#383838</color>

@@ -5,10 +5,4 @@
               android:layout_height="match_parent"
               android:gravity="center"
               android:orientation="vertical">
-
-    <android.support.v7.widget.AppCompatImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:tint="@color/colorPrimary"
-        app:srcCompat="@drawable/ic_tab_translate"/>
 </LinearLayout>

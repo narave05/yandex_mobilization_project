@@ -48,7 +48,7 @@ class LanguageListPresenter extends BaseRepositoryPresenter<LanguageListContract
     }
 
     @Override
-    public void handleRepeatClick() {
+    public void handleRetryClick() {
         getRepository().getAndSaveAvailableLanguageListAsync();
         if (isViewAttached()) {
             getView().showProgress();

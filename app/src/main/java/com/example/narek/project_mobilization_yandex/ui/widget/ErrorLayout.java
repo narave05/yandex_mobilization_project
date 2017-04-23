@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,7 +19,7 @@ public class ErrorLayout extends FrameLayout {
     private TextView mErrorText;
     private TextView mErrorHint;
 
-    OnClickRepeat mOnClickRepeat;
+    OnClickRetry mOnClickRetry;
 
     public ErrorLayout(@NonNull Context context) {
         super(context);
@@ -36,23 +37,23 @@ public class ErrorLayout extends FrameLayout {
         addView(linearLayout);
         mErrorText = (TextView) linearLayout.findViewById(R.id.error_text);
         mErrorHint = (TextView) linearLayout.findViewById(R.id.error_hint);
-        TextView buttonRecreate = (TextView) linearLayout.findViewById(R.id.button_recreate);
+        Button buttonRecreate = (Button) linearLayout.findViewById(R.id.button_retry);
         buttonRecreate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mOnClickRepeat != null) {
-                    mOnClickRepeat.onClickRepeat();
+                if (mOnClickRetry != null) {
+                    mOnClickRetry.onClickRetry();
                 }
             }
         });
     }
 
-    public void setOnClickRepeat(OnClickRepeat onClickRepeat) {
-        mOnClickRepeat = onClickRepeat;
+    public void setOnClickRetry(OnClickRetry onClickRetry) {
+        mOnClickRetry = onClickRetry;
     }
 
-    public interface OnClickRepeat {
-        void onClickRepeat();
+    public interface OnClickRetry {
+        void onClickRetry();
     }
 
     public void setErrorTextAndHint(String errorText, String errorHint) {

@@ -23,16 +23,19 @@
         android:textColor="@color/color4"
         android:textSize="14sp"/>
 
-    <TextView
-        android:id="@+id/button_recreate"
+    <Button
+        android:id="@+id/button_retry"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:background="@color/color5"
-        android:clickable="true"
+        android:background="@color/retry_button_color"
         android:foreground="?selectableItemBackground"
-        android:padding="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="@string/recreate_text"
-        />
+        android:textSize="13sp"
+        android:textStyle="normal"/>
 
 </LinearLayout>
